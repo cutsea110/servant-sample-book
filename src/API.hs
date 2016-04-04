@@ -16,7 +16,11 @@ import Servant
 import Servant.API
 import Servant.Server
 
-import Model
+import Types
+import Address
+import Author
+import Publisher
+import Book
 
 type Handler a = ExceptT ServantErr IO a
                

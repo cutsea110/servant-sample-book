@@ -16,10 +16,10 @@ import Address
 newtype AuthorId = AuthorId { getAuthorId :: Integer } deriving (Show, FromJSON, ToJSON, Generic)
 
 data Author = Author { authorId :: AuthorId
-                     , autherName :: String
-                     , autherGender :: Gender
-                     , autherBirth :: Day
-                     , autherAge :: Int
-                     , autherAddress :: Address
+                     , name :: String
+                     , gender :: Gender
+                     , birth :: Day
+                     , age :: Int
+                     , address :: Address
                      } deriving (Show, FromJSON, ToJSON, Generic)
 

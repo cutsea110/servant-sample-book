@@ -13,7 +13,7 @@ import Address
 newtype PublisherId = PublisherId { getPublisherId :: Integer } deriving (Show, FromJSON, ToJSON, Generic)
 
 data Publisher = Publisher { publisherId :: PublisherId
-                           , publisherName :: String
-                           , publisherType :: CompanyType
-                           , publisherAddress :: Address
+                           , name :: String
+                           , companyType :: CompanyType
+                           , address :: Address
                            } deriving (Show, FromJSON, ToJSON, Generic)

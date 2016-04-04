@@ -12,11 +12,11 @@ import Types
 import Author
 import Publisher
 
-data Book = Book { bookTitle :: String
-                 , bookISBN :: ISBN
-                 , bookCategory :: Category
-                 , bookDescription :: String
-                 , bookPublishedBy :: Publisher
-                 , bookAuthers :: [Author]
-                 , bookPublishedAt :: Day
+data Book = Book { title :: String
+                 , isbn :: ISBN
+                 , category :: Category
+                 , description :: String
+                 , publishedBy :: Publisher
+                 , authers :: [Author]
+                 , publishedAt :: Day
                  } deriving (Show, FromJSON, ToJSON, Generic)
