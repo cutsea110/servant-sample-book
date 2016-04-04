@@ -1,12 +1,12 @@
 {-# LANGUAGE OverloadedStrings #-}
 module Docs where
 
-import Book
 import Data.Maybe (fromJust)
-import Data.Text as T
-import Data.Time.Calendar
+import Data.Time.Calendar (Day, fromGregorian)
 import Servant.API
 import Servant.Docs
+
+import Model
 
 instance ToSample Integer where
   toSamples _ = [("test" , 42)]

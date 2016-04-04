@@ -1,18 +1,15 @@
 module Test where
 
-import Book
-import Control.Monad
-import Control.Monad.Trans.Class
-import Control.Monad.IO.Class
 import Data.Text as T
-import Data.Time.Calendar
-import Data.Time.Clock
+import Data.Time.Calendar (Day, fromGregorian)
 import Test.QuickCheck
-import Test.QuickCheck.Gen
-import Servant
+import Servant (Proxy(..), NamedContext)
 import Servant.Mock (mock)
-import Servant.Server (serve, Context(..))
+import Servant.Server (serve)
 import Network.Wai.Handler.Warp (run)
+
+import Model
+import API (api)
 
 instance Arbitrary Text where
   arbitrary = T.pack <$> arbitrary
