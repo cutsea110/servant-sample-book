@@ -6,7 +6,11 @@ import Data.Time.Calendar (Day, fromGregorian)
 import Servant.API
 import Servant.Docs
 
-import Model
+import Types
+import Address
+import Author
+import Publisher
+import Book
 
 instance ToSample Integer where
   toSamples _ = [("test" , 42)]

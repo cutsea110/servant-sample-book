@@ -29,10 +29,38 @@ data Prefecture = Hokkaido
                 deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum)
 
 
-newtype Postcode = Postcode { getPostcode :: String } deriving (Show, FromJSON, ToJSON, Generic)
-newtype Tel = Tel { getTel :: String } deriving (Show, FromJSON, ToJSON, Generic)
-newtype Fax = Fax { getFax :: String } deriving (Show, FromJSON, ToJSON, Generic)
-newtype Emailaddress = Emailaddress { getEmailaddress :: String } deriving (Show, FromJSON, ToJSON, Generic)
+newtype Postcode = Postcode { getPostcode :: Text } deriving (Show, Generic)
+
+instance FromJSON Postcode where
+  parseJSON (String v) = return $ Postcode v
+  parseJSON _ = mempty
+instance ToJSON Postcode where
+  toJSON = String . getPostcode
+
+newtype Tel = Tel { getTel :: Text } deriving (Show, Generic)
+
+instance FromJSON Tel where
+  parseJSON (String v) = return $ Tel v
+  parseJSON _ = mempty
+instance ToJSON Tel where
+  toJSON = String . getTel
+
+newtype Fax = Fax { getFax :: Text } deriving (Show, Generic)
+
+instance FromJSON Fax where
+  parseJSON (String v) = return $ Fax v
+  parseJSON _ = mempty
+instance ToJSON Fax where
+  toJSON = String . getFax
+
+newtype Emailaddress = Emailaddress { getEmailaddress :: Text } deriving (Show, Generic)
+
+instance FromJSON Emailaddress where
+  parseJSON (String v) = return $ Emailaddress v
+  parseJSON _ = mempty
+instance ToJSON Emailaddress where
+  toJSON = String . getEmailaddress
+
 data Gender = Female
             | Male
             deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum)
@@ -52,8 +80,13 @@ data Category = Science
               | Magazine
               deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum)
 
-newtype ISBN = ISBN {getISBN :: Text} deriving (Show, FromJSON, ToJSON, Generic)
+newtype ISBN = ISBN {getISBN :: Text} deriving (Show, Generic)
 
+instance FromJSON ISBN where
+  parseJSON (String v) = return $ ISBN v
+  parseJSON _ = mempty
+instance ToJSON ISBN where
+  toJSON = String . getISBN
 instance FromHttpApiData ISBN where
   parseQueryParam = Right . ISBN
 

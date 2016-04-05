@@ -6,10 +6,17 @@ module Address
        ) where
 
 import Data.Aeson
+import Data.Scientific (scientific, coefficient)
 import GHC.Generics
 import Types
 
-newtype AddressId = AddressId { getAddressId :: Integer } deriving (Show, FromJSON, ToJSON, Generic)
+newtype AddressId = AddressId { getAddressId :: Integer } deriving (Show, Generic)
+
+instance FromJSON AddressId where
+  parseJSON (Number v) = AddressId <$> pure (coefficient v)
+  parseJSON _ = mempty
+instance ToJSON AddressId where
+  toJSON = Number . flip scientific 0 . getAddressId
 
 data Address = Address { addressId :: AddressId
                        , postalcode :: Postcode
@@ -20,4 +27,3 @@ data Address = Address { addressId :: AddressId
                        , fax :: Fax
                        , email :: Emailaddress
                        } deriving (Show, FromJSON, ToJSON, Generic)
-

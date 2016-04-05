@@ -1,5 +1,6 @@
 module Test where
 
+import Data.Scientific
 import Data.Text as T
 import Data.Time.Calendar (Day, fromGregorian)
 import Test.QuickCheck
@@ -8,7 +9,11 @@ import Servant.Mock (mock)
 import Servant.Server (serve)
 import Network.Wai.Handler.Warp (run)
 
-import Model
+import Types
+import Address
+import Author
+import Publisher
+import Book
 import API (api)
 
 instance Arbitrary Text where
@@ -21,13 +26,16 @@ instance Arbitrary Day where
       month = elements [1..12]
       day = elements [1..31]
 
+instance Arbitrary Scientific where
+  arbitrary = scientific <$> arbitrary <*> pure 0
+
 instance Arbitrary Prefecture where
   arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary Postcode where
   arbitrary = Postcode <$> (append <$> code3 <*> code4)
     where
-      append x y = x ++ "-" ++ y
+      append x y = pack $ x ++ "-" ++ y
       n = elements ['0'..'9']
       code3 = vectorOf 3 n
       code4 = vectorOf 4 n
@@ -35,7 +43,7 @@ instance Arbitrary Postcode where
 instance Arbitrary Tel where
   arbitrary = Tel <$> (append <$> code3 <*> code4 <*> code4)
     where
-      append x y z = x ++ "-" ++ y ++ "-" ++ z
+      append x y z = pack $ x ++ "-" ++ y ++ "-" ++ z
       n = elements ['0'..'9']
       code3 = (:) <$> pure '0' <*> vectorOf 2 n
       code4 = vectorOf 4 n
@@ -43,7 +51,7 @@ instance Arbitrary Tel where
 instance Arbitrary Fax where
   arbitrary = Fax <$> (append <$> code3 <*> code4 <*> code4)
     where
-      append x y z = x ++ "-" ++ y ++ "-" ++ z
+      append x y z = pack $ x ++ "-" ++ y ++ "-" ++ z
       n = elements ['0'..'9']
       code3 = (:) <$> pure '0' <*> vectorOf 2 n
       code4 = vectorOf 4 n
@@ -51,7 +59,7 @@ instance Arbitrary Fax where
 instance Arbitrary Emailaddress where
   arbitrary = Emailaddress <$> (append <$> term <*> domain)
     where
-      append x y = x ++ "@" ++ y
+      append x y = pack $ x ++ "@" ++ y
       h = elements (['a'..'z']++['A'..'Z'])
       t = resize 7 $ listOf1 $ elements (['0'..'9']++['a'..'z']++['.','-','_'])
       d = elements [".com",".co.jp",".org",".or.jp",".net",".ne.jp",".ac.jp"]
