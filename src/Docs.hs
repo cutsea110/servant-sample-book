@@ -42,11 +42,11 @@ instance ToSample Book where
       a = fromJust $ toSample undefined
       d = fromJust $ toSample undefined
 
-instance ToParam (QueryParam "limit" Int) where
-  toParam _ = DocQueryParam "limit" ["10", "30", "50", "100"] "limit of items to get" Normal
+instance ToParam (QueryParam "page" Int) where
+  toParam _ = DocQueryParam "page" ["1", "2", "3", "10"] "page number to get" Normal
   
-instance ToParam (QueryParam "offset" Int) where
-  toParam _ = DocQueryParam "offset" ["10", "20", "30", "50", "100"] "offset of items to skip" Normal
+instance ToParam (QueryParam "per_page" Int) where
+  toParam _ = DocQueryParam "per_page" ["10", "30", "50", "100"] "number of items per page to get" Normal
   
 
 instance ToCapture (Capture "id" AddressId) where

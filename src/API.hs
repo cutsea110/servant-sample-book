@@ -25,7 +25,7 @@ import Book
 type Handler a = ExceptT ServantErr IO a
                
 type AddressAPI =
-       "addresses" :> QueryParam "limit" Int :> QueryParam "offset" Int :> Get '[JSON] [Address]
+       "addresses" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Address]
   :<|> "address" :> ReqBody '[JSON] Address :> Post '[JSON] Integer
   :<|> "address" :> Capture "id" Integer :>
        (    Get '[JSON] Address
@@ -56,7 +56,7 @@ addressServer = list :<|> new :<|> opes
     delete = undefined
 
 type AuthorAPI =
-       "authors" :> QueryParam "limit" Int :> QueryParam "offset" Int :> Get '[JSON] [Author]
+       "authors" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Author]
   :<|> "author" :> ReqBody '[JSON] Author :> Post '[JSON] Integer
   :<|> "author" :> Capture "id" Integer :>
        (    Get '[JSON] Author
@@ -88,7 +88,7 @@ authorServer = list :<|> new :<|> opes
        
 
 type PublisherAPI =
-       "publishers" :> QueryParam "limit" Int :> QueryParam "offset" Int :> Get '[JSON] [Publisher]
+       "publishers" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Publisher]
   :<|> "publisher" :> ReqBody '[JSON] Publisher :> Post '[JSON] Integer
   :<|> "publisher" :> Capture "id" Integer :>
        (    Get '[JSON] Publisher
@@ -120,7 +120,7 @@ publisherServer = list :<|> new :<|> opes
 
 
 type BookAPI =
-       "books" :> QueryParam "limit" Int :> QueryParam "offset" Int :> Get '[JSON] [Book]
+       "books" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Book]
   :<|> "book" :> ReqBody '[JSON] Book :> Post '[JSON] ISBN
   :<|> "book" :> Capture "isbn" ISBN :>
        (    Get '[JSON] Book
