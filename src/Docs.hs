@@ -19,7 +19,7 @@ instance ToSample ISBN where
   toSamples _ = [("ISBN", ISBN "isbn")]
 
 instance ToSample Publisher where
-  toSamples _ = [("publisher", Publisher (PublisherId 1) "Ohm" CO a)]
+  toSamples _ = [("publisher", Publisher (Just (PublisherId 1)) "Ohm" CO a)]
     where
       a = fromJust $ toSample undefined
 
@@ -27,16 +27,16 @@ instance ToSample Day where
   toSamples _ = [("day", fromGregorian 1970 11 6)]
 
 instance ToSample Author where
-  toSamples _ = [("author", Author (AuthorId 1) "Katsutoshi Itoh" Male d 45 a)]
+  toSamples _ = [("author", Author (Just (AuthorId 1)) "Katsutoshi Itoh" Male d 45 a)]
     where
       a = fromJust $ toSample undefined
       d = fromJust $ toSample undefined
 
 instance ToSample Address where
-  toSamples _ = [("address", Address (AddressId 1) (Postcode "134-0091") Tokyo "Funabori, Edogawa" "Crest.F.SS" (Tel "090-4134-5069") (Fax "03-3356-7662") (Emailaddress "cutsea110@gmail.com"))]
+  toSamples _ = [("address", Address (Just (AddressId 1)) (Postcode "134-0091") Tokyo "Funabori, Edogawa" "Crest.F.SS" (Tel "090-4134-5069") (Fax "03-3356-7662") (Emailaddress "cutsea110@gmail.com"))]
 
 instance ToSample Book where
-  toSamples c = [("book", Book "Haskell book" (ISBN "isbn") Computer "for Haskeller" p [a] d)]
+  toSamples c = [("book", Book (Just (BookId 1)) "Haskell book" (ISBN "isbn") Computer "for Haskeller" p [a] d)]
     where
       p = fromJust $ toSample undefined
       a = fromJust $ toSample undefined

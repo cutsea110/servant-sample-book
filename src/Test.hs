@@ -26,9 +26,6 @@ instance Arbitrary Day where
       month = elements [1..12]
       day = elements [1..31]
 
-instance Arbitrary Scientific where
-  arbitrary = scientific <$> arbitrary <*> pure 0
-
 instance Arbitrary Prefecture where
   arbitrary = elements [minBound..maxBound]
 
@@ -85,12 +82,23 @@ instance Arbitrary Publisher where
 
 instance Arbitrary AddressId where
   arbitrary = AddressId <$> arbitrary `suchThat` (>0)
+instance {-# OVERLAPPING #-} Arbitrary (Maybe AddressId) where
+  arbitrary = Just <$> arbitrary
 
 instance Arbitrary AuthorId where
   arbitrary = AuthorId <$> arbitrary `suchThat` (>0)
+instance {-# OVERLAPPING #-} Arbitrary (Maybe AuthorId) where
+  arbitrary = Just <$> arbitrary
 
 instance Arbitrary PublisherId where
   arbitrary = PublisherId <$> arbitrary `suchThat` (>0)
+instance {-# OVERLAPPING #-} Arbitrary (Maybe PublisherId) where
+  arbitrary = Just <$> arbitrary
+
+instance Arbitrary BookId where
+  arbitrary = BookId <$> arbitrary `suchThat` (>0)
+instance {-# OVERLAPPING #-} Arbitrary (Maybe BookId) where
+  arbitrary = Just <$> arbitrary
 
 instance Arbitrary ISBN where
   arbitrary = ISBN <$> (append <$> code3 <*> code1 <*> code2 <*> code6 <*> code1)
@@ -106,7 +114,7 @@ instance Arbitrary Category where
   arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary Book where
-  arbitrary = Book <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> authors <*> arbitrary
+  arbitrary = Book <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> authors <*> arbitrary
     where
       authors = resize 3 $ listOf1 arbitrary
 

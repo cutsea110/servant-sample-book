@@ -18,7 +18,7 @@ instance FromJSON AddressId where
 instance ToJSON AddressId where
   toJSON = Number . flip scientific 0 . getAddressId
 
-data Address = Address { addressId :: AddressId
+data Address = Address { addressId :: Maybe AddressId
                        , postalcode :: Postcode
                        , prefecture :: Prefecture
                        , address :: String

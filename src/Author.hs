@@ -22,7 +22,7 @@ instance FromJSON AuthorId where
 instance ToJSON AuthorId where
   toJSON = Number . flip scientific 0 . getAuthorId
 
-data Author = Author { authorId :: AuthorId
+data Author = Author { authorId :: Maybe AuthorId
                      , name :: String
                      , gender :: Gender
                      , birth :: Day

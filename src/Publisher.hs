@@ -19,7 +19,7 @@ instance FromJSON PublisherId where
 instance ToJSON PublisherId where
   toJSON = Number . flip scientific 0 . getPublisherId
 
-data Publisher = Publisher { publisherId :: PublisherId
+data Publisher = Publisher { publisherId :: Maybe PublisherId
                            , name :: String
                            , companyType :: CompanyType
                            , address :: Address
