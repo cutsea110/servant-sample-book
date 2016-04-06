@@ -20,7 +20,7 @@ import Servant.API
 data Prefecture = Hokkaido
                 | Aomori | Iwate | Miyagi | Akita | Yamagata | Fukushima
                 | Ibaraki | Tochigi | Gunma | Saitama | Chiba | Tokyo | Kanagawa
-                | Nigata | Toyama | Ishikawa | Fukui | Yamanshi | Nagano | Gifu | Shizuoka | Aichi
+                | Nigata | Toyama | Ishikawa | Fukui | Yamanashi | Nagano | Gifu | Shizuoka | Aichi
                 | Mie | Shiga | Kyoto | Osaka | Hyogo | Nara | Wakayama
                 | Tottori | Shimane | Okayama | Hiroshima | Yamaguchi
                 | Tokushima | Kagawa | Ehime | Kochi

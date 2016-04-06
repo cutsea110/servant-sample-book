@@ -6,9 +6,10 @@ module Author
        ) where
 
 import Data.Aeson
-import Data.Text
+import Data.Text (unpack)
 import Data.Time.Calendar
 import GHC.Generics
+import Servant.API (FromHttpApiData(..))
 
 import Data.Scientific (scientific, coefficient)
 import Types
@@ -21,6 +22,8 @@ instance FromJSON AuthorId where
   parseJSON _ = mempty
 instance ToJSON AuthorId where
   toJSON = Number . flip scientific 0 . getAuthorId
+instance FromHttpApiData AuthorId where
+  parseQueryParam = Right . AuthorId . read . unpack
 
 data Author = Author { authorId :: Maybe AuthorId
                      , name :: String

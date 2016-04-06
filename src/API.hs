@@ -26,16 +26,16 @@ type Handler a = ExceptT ServantErr IO a
                
 type AddressAPI =
        "addresses" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Address]
-  :<|> "address" :> ReqBody '[JSON] Address :> Post '[JSON] Integer
-  :<|> "address" :> Capture "id" Integer :>
+  :<|> "address" :> ReqBody '[JSON] Address :> Post '[JSON] AddressId
+  :<|> "address" :> Capture "id" AddressId :>
        (    Get '[JSON] Address
        :<|> ReqBody '[JSON] Address :> Put '[JSON] ()
        :<|> Delete '[JSON] ()
        )
 
 addressServer :: (Maybe Int -> Maybe Int -> Handler [Address])
-            :<|> (Address -> Handler Integer)
-            :<|> (Integer ->
+            :<|> (Address -> Handler AddressId)
+            :<|> (AddressId ->
                        Handler Address
                   :<|> (Address -> Handler ())
                   :<|> Handler ()
@@ -44,29 +44,29 @@ addressServer = list :<|> new :<|> opes
   where
     list :: Maybe Int -> Maybe Int -> Handler [Address]
     list = undefined
-    new :: Address -> Handler Integer
+    new :: Address -> Handler AddressId
     new = undefined
-    opes :: Integer -> Handler Address :<|> (Address -> Handler ()) :<|> Handler ()
+    opes :: AddressId -> Handler Address :<|> (Address -> Handler ()) :<|> Handler ()
     opes addressid = view addressid :<|> update addressid :<|> delete addressid
-    view :: Integer -> Handler Address
+    view :: AddressId -> Handler Address
     view = undefined
-    update :: Integer -> Address -> Handler ()
+    update :: AddressId -> Address -> Handler ()
     update = undefined
-    delete :: Integer -> Handler ()
+    delete :: AddressId -> Handler ()
     delete = undefined
 
 type AuthorAPI =
        "authors" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Author]
-  :<|> "author" :> ReqBody '[JSON] Author :> Post '[JSON] Integer
-  :<|> "author" :> Capture "id" Integer :>
+  :<|> "author" :> ReqBody '[JSON] Author :> Post '[JSON] AuthorId
+  :<|> "author" :> Capture "id" AuthorId :>
        (    Get '[JSON] Author
        :<|> ReqBody '[JSON] Author :> Put '[JSON] ()
        :<|> Delete '[JSON] ()
        )
 
 authorServer :: (Maybe Int -> Maybe Int -> Handler [Author])
-           :<|> (Author -> Handler Integer)
-           :<|> (Integer ->
+           :<|> (Author -> Handler AuthorId)
+           :<|> (AuthorId ->
                       Handler Author
                  :<|> (Author -> Handler ())
                  :<|> Handler ()
@@ -75,30 +75,30 @@ authorServer = list :<|> new :<|> opes
   where
     list :: Maybe Int -> Maybe Int -> Handler [Author]
     list = undefined
-    new :: Author -> Handler Integer
+    new :: Author -> Handler AuthorId
     new = undefined
-    opes :: Integer -> Handler Author :<|> (Author -> Handler ()) :<|> Handler ()
+    opes :: AuthorId -> Handler Author :<|> (Author -> Handler ()) :<|> Handler ()
     opes authorid = view authorid :<|> update authorid :<|> delete authorid
-    view :: Integer -> Handler Author
+    view :: AuthorId -> Handler Author
     view = undefined
-    update :: Integer -> Author -> Handler ()
+    update :: AuthorId -> Author -> Handler ()
     update = undefined
-    delete :: Integer -> Handler ()
+    delete :: AuthorId -> Handler ()
     delete = undefined
        
 
 type PublisherAPI =
        "publishers" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Publisher]
-  :<|> "publisher" :> ReqBody '[JSON] Publisher :> Post '[JSON] Integer
-  :<|> "publisher" :> Capture "id" Integer :>
+  :<|> "publisher" :> ReqBody '[JSON] Publisher :> Post '[JSON] PublisherId
+  :<|> "publisher" :> Capture "id" PublisherId :>
        (    Get '[JSON] Publisher
        :<|> ReqBody '[JSON] Publisher :> Put '[JSON] ()
        :<|> Delete '[JSON] ()
        )
 
 publisherServer :: (Maybe Int -> Maybe Int -> Handler [Publisher])
-              :<|> (Publisher -> Handler Integer)
-              :<|> (Integer ->
+              :<|> (Publisher -> Handler PublisherId)
+              :<|> (PublisherId ->
                         Handler Publisher
                    :<|> (Publisher -> Handler ())
                    :<|> Handler ()
@@ -107,15 +107,15 @@ publisherServer = list :<|> new :<|> opes
   where
     list :: Maybe Int -> Maybe Int -> Handler [Publisher]
     list = undefined
-    new :: Publisher -> Handler Integer
+    new :: Publisher -> Handler PublisherId
     new = undefined
-    opes :: Integer -> Handler Publisher :<|> (Publisher -> Handler ()) :<|> Handler ()
+    opes :: PublisherId -> Handler Publisher :<|> (Publisher -> Handler ()) :<|> Handler ()
     opes publisherid = view publisherid :<|> update publisherid :<|> delete publisherid
-    view :: Integer -> Handler Publisher
+    view :: PublisherId -> Handler Publisher
     view = undefined
-    update :: Integer -> Publisher -> Handler ()
+    update :: PublisherId -> Publisher -> Handler ()
     update = undefined
-    delete :: Integer -> Handler ()
+    delete :: PublisherId -> Handler ()
     delete = undefined
 
 

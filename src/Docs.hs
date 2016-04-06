@@ -11,9 +11,22 @@ import Address
 import Author
 import Publisher
 import Book
+import API (api)
 
 instance ToSample Integer where
   toSamples _ = [("test" , 42)]
+
+instance ToSample AddressId where
+  toSamples _ = [("addressId", AddressId 42)]
+
+instance ToSample AuthorId where
+  toSamples _ = [("authorId", AuthorId 42)]
+
+instance ToSample PublisherId where
+  toSamples _ = [("publisherId", PublisherId 42)]
+
+instance ToSample BookId where
+  toSamples _ = [("bookId", BookId 42)]
 
 instance ToSample ISBN where
   toSamples _ = [("ISBN", ISBN "isbn")]
@@ -60,3 +73,6 @@ instance ToCapture (Capture "id" PublisherId) where
 
 instance ToCapture (Capture "isbn" ISBN) where
   toCapture _ = DocCapture "isbn" "(string) ISBN identifier"
+
+genDoc :: IO ()
+genDoc = putStr $ markdown $ docs $ api
