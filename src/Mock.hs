@@ -1,4 +1,5 @@
-module Test where
+{-# LANGUAGE FlexibleInstances #-}
+module Main where
 
 import Data.Scientific
 import Data.Text as T
@@ -111,4 +112,4 @@ instance Arbitrary Book where
       authors = resize 3 $ listOf1 arbitrary
 
 main :: IO ()
-main = run 8081 $ serve api (mock api (Proxy :: Proxy '[NamedContext "test" '[]]))
+main = run 8081 $ serve api (mock api Proxy)
