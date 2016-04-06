@@ -72,7 +72,10 @@ instance ToCapture (Capture "id" PublisherId) where
   toCapture _ = DocCapture "id" "(integer) publisher numeric identifier"
 
 instance ToCapture (Capture "isbn" ISBN) where
-  toCapture _ = DocCapture "isbn" "(string) ISBN identifier"
+  toCapture _ = DocCapture "isbn" "(string) book ISBN identifier"
+
+instance ToCapture (Capture "id" BookId) where
+  toCapture _ = DocCapture "id" "(integer) book numeric identifier"
 
 genDoc :: IO ()
 genDoc = putStr $ markdown $ docs $ api

@@ -32,6 +32,6 @@ data Book = Book { bookId :: Maybe BookId
                  , category :: Category
                  , description :: String
                  , publishedBy :: Publisher
-                 , authers :: [Author]
+                 , authors :: [Author]
                  , publishedAt :: Day
                  } deriving (Show, FromJSON, ToJSON, Generic)

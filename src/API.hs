@@ -121,34 +121,53 @@ publisherServer = list :<|> new :<|> opes
 
 type BookAPI =
        "books" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Book]
-  :<|> "book" :> ReqBody '[JSON] Book :> Post '[JSON] ISBN
-  :<|> "book" :> Capture "isbn" ISBN :>
+  :<|> "book" :> ReqBody '[JSON] Book :> Post '[JSON] BookId
+  :<|> "book" :> Capture "id" BookId :>
+       (    Get '[JSON] Book
+       :<|> ReqBody '[JSON] Book :> Put '[JSON] ()
+       :<|> Delete '[JSON] ()
+       )
+  :<|> "book" :> "isbn" :> Capture "isbn" ISBN :>
        (    Get '[JSON] Book
        :<|> ReqBody '[JSON] Book :> Put '[JSON] ()
        :<|> Delete '[JSON] ()
        )
 
 bookServer :: (Maybe Int -> Maybe Int -> Handler [Book])
-         :<|> (Book -> Handler ISBN)
+         :<|> (Book -> Handler BookId)
+         :<|> (BookId ->
+                    Handler Book
+               :<|> (Book -> Handler ())
+               :<|> Handler ()
+               )
          :<|> (ISBN ->
                     Handler Book
                :<|> (Book -> Handler ())
                :<|> Handler ()
                )
-bookServer = list :<|> new :<|> opes
+bookServer = list :<|> new :<|> opes :<|> opes'
   where
     list :: Maybe Int -> Maybe Int -> Handler [Book]
     list = undefined
-    new :: Book -> Handler ISBN
+    new :: Book -> Handler BookId
     new = undefined
-    opes :: ISBN -> Handler Book :<|> (Book -> Handler ()) :<|> Handler ()
-    opes isbn = view isbn :<|> update isbn :<|> delete isbn
-    view :: ISBN -> Handler Book
+    opes :: BookId -> Handler Book :<|> (Book -> Handler ()) :<|> Handler ()
+    opes bookid = view bookid :<|> update bookid :<|> delete bookid
+    view :: BookId -> Handler Book
     view = undefined
-    update :: ISBN -> Book -> Handler ()
+    update :: BookId -> Book -> Handler ()
     update = undefined
-    delete :: ISBN -> Handler ()
+    delete :: BookId -> Handler ()
     delete = undefined
+    opes' :: ISBN -> Handler Book :<|> (Book -> Handler ()) :<|> Handler ()
+    opes' isbn = view' isbn :<|> update' isbn :<|> delete' isbn
+    view' :: ISBN -> Handler Book
+    view' = undefined
+    update' :: ISBN -> Book -> Handler ()
+    update' = undefined
+    delete' :: ISBN -> Handler ()
+    delete' = undefined
+
 
 type API = AddressAPI
       :<|> AuthorAPI
