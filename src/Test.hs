@@ -2,8 +2,10 @@ module Test where
 
 import Data.Scientific
 import Data.Text as T
+import Data.Time (UTCTime)
 import Data.Time.Calendar (Day, fromGregorian)
 import Test.QuickCheck
+import Test.QuickCheck.Instances
 import Servant (Proxy(..), NamedContext)
 import Servant.Mock (mock)
 import Servant.Server (serve)
@@ -15,16 +17,6 @@ import Author
 import Publisher
 import Book
 import API (api)
-
-instance Arbitrary Text where
-  arbitrary = T.pack <$> arbitrary
-
-instance Arbitrary Day where
-  arbitrary = fromGregorian <$> year <*> month <*> day
-    where
-      year = elements [1970..2016]
-      month = elements [1..12]
-      day = elements [1..31]
 
 instance Arbitrary Prefecture where
   arbitrary = elements [minBound..maxBound]
@@ -64,13 +56,13 @@ instance Arbitrary Emailaddress where
       domain = (++) <$> term <*> d
 
 instance Arbitrary Address where
-  arbitrary = Address <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+  arbitrary = Address <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
 
 instance Arbitrary Gender where
   arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary Author where
-  arbitrary = Author <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> age <*> arbitrary
+  arbitrary = Author <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> age <*> arbitrary <*> arbitrary <*> arbitrary
     where
       age = arbitrary `suchThat` ((&&) <$> (0<) <*> (<120))
 
@@ -78,7 +70,7 @@ instance Arbitrary CompanyType where
     arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary Publisher where
-  arbitrary = Publisher <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+  arbitrary = Publisher <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
 
 instance Arbitrary AddressId where
   arbitrary = AddressId <$> arbitrary `suchThat` (>0)
@@ -114,7 +106,7 @@ instance Arbitrary Category where
   arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary Book where
-  arbitrary = Book <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> authors <*> arbitrary
+  arbitrary = Book <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> authors <*> arbitrary <*> arbitrary <*> arbitrary
     where
       authors = resize 3 $ listOf1 arbitrary
 

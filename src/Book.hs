@@ -8,6 +8,7 @@ module Book
 import Data.Aeson
 import Data.Scientific (scientific, coefficient)
 import Data.Text (unpack)
+import Data.Time (UTCTime)
 import Data.Time.Calendar
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
@@ -34,4 +35,6 @@ data Book = Book { bookId :: Maybe BookId
                  , publishedBy :: Publisher
                  , authors :: [Author]
                  , publishedAt :: Day
+                 , createdAt :: UTCTime
+                 , updatedAt :: UTCTime
                  } deriving (Show, FromJSON, ToJSON, Generic)

@@ -7,6 +7,7 @@ module Author
 
 import Data.Aeson
 import Data.Text (unpack)
+import Data.Time (UTCTime)
 import Data.Time.Calendar
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
@@ -31,4 +32,6 @@ data Author = Author { authorId :: Maybe AuthorId
                      , birth :: Day
                      , age :: Int
                      , address :: Address
+                     , createdAt :: UTCTime
+                     , updatedAt :: UTCTime
                      } deriving (Show, FromJSON, ToJSON, Generic)

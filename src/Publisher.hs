@@ -8,6 +8,7 @@ module Publisher
 import Data.Aeson
 import Data.Scientific (scientific, coefficient)
 import Data.Text (unpack)
+import Data.Time (UTCTime)
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
 
@@ -28,4 +29,6 @@ data Publisher = Publisher { publisherId :: Maybe PublisherId
                            , name :: String
                            , companyType :: CompanyType
                            , address :: Address
+                           , createdAt :: UTCTime
+                           , updatedAt :: UTCTime
                            } deriving (Show, FromJSON, ToJSON, Generic)

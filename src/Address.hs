@@ -8,6 +8,7 @@ module Address
 import Data.Aeson
 import Data.Scientific (scientific, coefficient)
 import Data.Text (unpack)
+import Data.Time
 import GHC.Generics
 import Types
 import Servant.API (FromHttpApiData(..))
@@ -30,4 +31,6 @@ data Address = Address { addressId :: Maybe AddressId
                        , tel :: Tel
                        , fax :: Fax
                        , email :: Emailaddress
+                       , createdAt :: UTCTime
+                       , updatedAt :: UTCTime
                        } deriving (Show, FromJSON, ToJSON, Generic)
