@@ -7,6 +7,7 @@ import Data.Time.Calendar (Day, fromGregorian)
 import Data.Time.Clock (DiffTime(..), secondsToDiffTime)
 import Servant.API
 import Servant.Docs
+import System.Directory (createDirectoryIfMissing)
 
 import Types
 import Address
@@ -101,3 +102,9 @@ instance ToCapture (Capture "id" BookId) where
 
 genDoc :: IO ()
 genDoc = putStr $ markdown $ docs $ api
+
+main :: IO ()
+main = do
+  createDirectoryIfMissing True "docs"
+
+  writeFile "docs/api.md" $ markdown $ docs api
