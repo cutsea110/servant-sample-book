@@ -17,7 +17,7 @@ import Book
 import API (api)
 
 instance ToSample Integer where
-  toSamples _ = [("test" , 42)]
+  toSamples _ = [("integer" , 42)]
 
 instance ToSample AddressId where
   toSamples _ = [("addressId", AddressId 42)]
@@ -70,13 +70,13 @@ instance ToSample Address where
       d2 = fromJust $ toSample undefined
 
 instance ToSample Book where
-  toSamples c = [("book", Book (Just (BookId 1)) "Haskell book" (ISBN "isbn") Computer "for Haskeller" p [a] d d1 d2)]
+  toSamples c = [("book", Book (Just (BookId 1)) "Haskell book" (ISBN "isbn") Computer "for Haskeller" p [a1, a2] d d1 d1)]
     where
-      p = fromJust $ toSample undefined
-      a = fromJust $ toSample undefined
+      p = PublisherInfo (PublisherId 3) "Ohm"
+      a1 = AuthorInfo (AuthorId 12) "伊東 勝利"
+      a2 = AuthorInfo (AuthorId 13) "山下 伸夫"
       d = fromJust $ toSample undefined
       d1 = fromJust $ toSample undefined
-      d2 = fromJust $ toSample undefined
 
 instance ToParam (QueryParam "page" Int) where
   toParam _ = DocQueryParam "page" ["1", "2", "3", "10"] "page number to get" Normal

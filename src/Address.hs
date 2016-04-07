@@ -7,7 +7,7 @@ module Address
 
 import Data.Aeson
 import Data.Scientific (scientific, coefficient)
-import Data.Text (unpack)
+import Data.Text (Text, unpack)
 import Data.Time
 import GHC.Generics
 import Types
@@ -26,8 +26,8 @@ instance FromHttpApiData AddressId where
 data Address = Address { addressId :: Maybe AddressId
                        , postcode :: Postcode
                        , prefecture :: Prefecture
-                       , address :: String
-                       , building :: String
+                       , address :: Text
+                       , building :: Text
                        , tel :: Tel
                        , fax :: Fax
                        , email :: Emailaddress

@@ -16,7 +16,7 @@ import Types
 import Address
 import Author
 import Publisher
-import Book
+import Book as Book
 import API (api)
 
 instance Arbitrary Prefecture where
@@ -105,6 +105,12 @@ instance Arbitrary ISBN where
 
 instance Arbitrary Category where
   arbitrary = elements [minBound..maxBound]
+
+instance Arbitrary Book.AuthorInfo where
+  arbitrary = AuthorInfo <$> arbitrary <*> arbitrary
+
+instance Arbitrary Book.PublisherInfo where
+  arbitrary = PublisherInfo <$> arbitrary <*> arbitrary
 
 instance Arbitrary Book where
   arbitrary = Book <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> authors <*> arbitrary <*> arbitrary <*> arbitrary

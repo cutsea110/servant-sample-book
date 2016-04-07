@@ -6,7 +6,7 @@ module Author
        ) where
 
 import Data.Aeson
-import Data.Text (unpack)
+import Data.Text (Text, unpack)
 import Data.Time (UTCTime)
 import Data.Time.Calendar
 import GHC.Generics
@@ -27,7 +27,7 @@ instance FromHttpApiData AuthorId where
   parseQueryParam = Right . AuthorId . read . unpack
 
 data Author = Author { authorId :: Maybe AuthorId
-                     , name :: String
+                     , name :: Text
                      , gender :: Gender
                      , birth :: Day
                      , age :: Int
