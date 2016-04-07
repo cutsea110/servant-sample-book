@@ -77,7 +77,7 @@ namespace ServantClientBook
     #endregion
     #region Book
     [JsonObject("AuthorInfo")]
-    public class AuthorInfoInBook
+    public class AuthorInfo
     {
         [JsonProperty("authorId")]
         public int authorId { get; set; }
@@ -86,7 +86,7 @@ namespace ServantClientBook
         public string authorName { get; set; }
     }
     [JsonObject("PublisherInfo")]
-    public class PublisherInfoInBook
+    public class PublisherInfo
     {
         [JsonProperty("publisherId")]
         public int publisherId { get; set; }
@@ -109,9 +109,9 @@ namespace ServantClientBook
         [JsonProperty("description")]
         public string description { get; set; }
         [JsonProperty("publishedBy")]
-        public PublisherInfoInBook publishedBy { get; set; }
+        public PublisherInfo publishedBy { get; set; }
         [JsonProperty("authors")]
-        public List<AuthorInfoInBook> authors { get; set; }
+        public List<AuthorInfo> authors { get; set; }
         [JsonProperty("publishedAt")]
         [JsonConverter(typeof(DayConverter))]
         public DateTime publishedAt { get; set; }

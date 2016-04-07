@@ -88,19 +88,19 @@ namespace ConsoleApplication1
                 description = "For Haskellers",
                 category = Category.Computer,
                 isbn = "ISBN123-4567-890-123",
-                authors = new List<AuthorInfoInBook>() {
-                    new AuthorInfoInBook()
+                authors = new List<AuthorInfo>() {
+                    new AuthorInfo()
                     {
                         authorId=1,
                         authorName="伊東 勝利"
                     },
-                    new AuthorInfoInBook()
+                    new AuthorInfo()
                     {
                         authorId=1,
                         authorName="山下 伸夫"
                     }
                 },
-                publishedBy = new PublisherInfoInBook()
+                publishedBy = new PublisherInfo()
                 {
                     publisherId=3,
                     publisherName="オーム社"
