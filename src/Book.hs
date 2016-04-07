@@ -3,8 +3,6 @@
 module Book
        ( BookId(..)
        , Book(..)
-       , AuthorInfo(..)
-       , PublisherInfo(..)
        ) where
 
 import Data.Aeson
@@ -16,8 +14,8 @@ import GHC.Generics
 import Servant.API (FromHttpApiData(..))
 
 import Types
-import Author
-import Publisher
+import AuthorInfo
+import PublisherInfo
 
 newtype BookId = BookId { getBookId :: Integer } deriving (Show, Generic)
 
@@ -28,19 +26,6 @@ instance ToJSON BookId where
   toJSON = Number . flip scientific 0 . getBookId
 instance FromHttpApiData BookId where
   parseQueryParam = Right . BookId . read . unpack
-
-type AuthorName = Text
-type PublisherName = Text
-
-data AuthorInfo = AuthorInfo { authorId :: AuthorId
-                             , authorName :: AuthorName
-                             }
-                  deriving (Show, FromJSON, ToJSON, Generic)
-                           
-data PublisherInfo = PublisherInfo { publisherId :: PublisherId
-                                   , publisherName :: PublisherName
-                                   }
-                     deriving (Show, FromJSON, ToJSON, Generic)
 
 data Book = Book { bookId :: Maybe BookId
                  , title :: Text

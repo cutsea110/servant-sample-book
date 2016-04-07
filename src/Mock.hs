@@ -15,8 +15,10 @@ import Network.Wai.Handler.Warp (run)
 import Types
 import Address
 import Author
+import AuthorInfo
 import Publisher
-import Book as Book
+import PublisherInfo
+import Book
 import API (api)
 
 instance Arbitrary Prefecture where
@@ -106,10 +108,10 @@ instance Arbitrary ISBN where
 instance Arbitrary Category where
   arbitrary = elements [minBound..maxBound]
 
-instance Arbitrary Book.AuthorInfo where
+instance Arbitrary AuthorInfo where
   arbitrary = AuthorInfo <$> arbitrary <*> arbitrary
 
-instance Arbitrary Book.PublisherInfo where
+instance Arbitrary PublisherInfo where
   arbitrary = PublisherInfo <$> arbitrary <*> arbitrary
 
 instance Arbitrary Book where

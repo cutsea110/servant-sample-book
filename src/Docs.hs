@@ -12,7 +12,9 @@ import System.Directory (createDirectoryIfMissing)
 import Types
 import Address
 import Author
+import AuthorInfo
 import Publisher
+import PublisherInfo
 import Book
 import API (api)
 
