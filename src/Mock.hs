@@ -69,11 +69,17 @@ instance Arbitrary Author where
     where
       age = arbitrary `suchThat` ((&&) <$> (0<) <*> (<120))
 
+instance Arbitrary AuthorList where
+  arbitrary = AuthorList <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+
 instance Arbitrary CompanyType where
-    arbitrary = elements [minBound..maxBound]
+  arbitrary = elements [minBound..maxBound]
 
 instance Arbitrary Publisher where
   arbitrary = Publisher <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+
+instance Arbitrary PublisherList where
+  arbitrary = PublisherList <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
 
 instance Arbitrary AddressId where
   arbitrary = AddressId <$> arbitrary `suchThat` (>0)
