@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -28,7 +29,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/address/{addressId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Address>(content);
         }
         public Address getAddress(int addressId)
@@ -40,7 +44,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/addresses");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<List<Address>>(content);
         }
         public List<Address> getAddresses()
@@ -51,9 +58,17 @@ namespace ServantClientBook
         public async Task<int> postAddressAsync(Address obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PostAsync($"{server}/address", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<int>(content);
         }
         public int postAddress(Address obj)
@@ -64,9 +79,17 @@ namespace ServantClientBook
         public async Task putAddressAsync(int addressId, Address obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PutAsync($"{server}/address/{addressId}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void putAddress(int addressid, Address obj)
@@ -78,7 +101,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/address/{addressId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void deleteAddress(int addressId)
@@ -86,13 +112,16 @@ namespace ServantClientBook
             Task t = deleteAddressAsync(addressId);
             t.GetAwaiter().GetResult();
         }
-        #endregion
+#endregion
         #region Author
         public async Task<Author> getAuthorAsync(int authorId)
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/author/{authorId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Author>(content);
         }
         public Author getAuthor(int authorId)
@@ -104,7 +133,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/authors");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<List<Author>>(content);
         }
         public List<Author> getAuthors()
@@ -115,9 +147,17 @@ namespace ServantClientBook
         public async Task<int> postAuthorAsync(Author obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PostAsync($"{server}/author", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<int>(content);
         }
         public int postAuthor(Author obj)
@@ -128,9 +168,17 @@ namespace ServantClientBook
         public async Task putAuthorAsync(int authorId, Author obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PutAsync($"{server}/author/{authorId}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void putAuthor(int authorId, Author obj)
@@ -142,7 +190,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/author/{authorId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void deleteAuthor(int authorId)
@@ -156,7 +207,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/publisher/{publisherId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Publisher>(content);
         }
         public Publisher getPublisher(int publisherId)
@@ -168,7 +222,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/publishers");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<List<Publisher>>(content);
         }
         public List<Publisher> getPublishers()
@@ -179,9 +236,17 @@ namespace ServantClientBook
         public async Task<int> postPublisherAsync(Publisher obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PostAsync($"{server}/publisher", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<int>(content);
         }
         public int postPublisher(Publisher obj)
@@ -192,9 +257,17 @@ namespace ServantClientBook
         public async Task putPublisherAsync(int publisherId, Publisher obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PutAsync($"{server}/publisher/{publisherId}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void putPublisher(int publisherId, Publisher obj)
@@ -206,7 +279,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/publisher/{publisherId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void deletePublisher(int publisherId)
@@ -220,7 +296,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/book/{bookId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Book>(content);
         }
         public Book getBook(int bookId)
@@ -232,7 +311,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/book/isbn/{isbn}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Book>(content);
         }
         public Book getBook(string isbn)
@@ -244,7 +326,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/books");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<List<Book>>(content);
         }
         public List<Book> getBooks()
@@ -255,9 +340,17 @@ namespace ServantClientBook
         public async Task<int> postBookAsync(Book obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PostAsync($"{server}/book", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<int>(content);
         }
         public int postBook(Book obj)
@@ -268,9 +361,17 @@ namespace ServantClientBook
         public async Task putBookAsync(int bookId, Book obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PutAsync($"{server}/book/{bookId}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void putBook(int bookId, Book obj)
@@ -281,9 +382,17 @@ namespace ServantClientBook
         public async Task putBookAsync(string isbn, Book obj)
         {
             var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
             var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
             var res = await client.PutAsync($"{server}/book/isbn/{isbn}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void putBook(string isbn, Book obj)
@@ -295,7 +404,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/book/{bookId}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void deleteBook(int bookId)
@@ -307,7 +419,10 @@ namespace ServantClientBook
         {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/book/isbn/{isbn}");
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
         public void deleteBook(string isbn)
