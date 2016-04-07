@@ -72,7 +72,18 @@ namespace ConsoleApplication1
 
                 #region Publisher Test
                 Publisher publissher = api.getPublisher(1);
-                List<Publisher> publishers = api.getPublishers();
+                PublisherList publishers = api.getPublishers();
+                PublisherList publishers2 = api.postPublishers(new PublisherQueryCondition()
+                {
+                    companyTypeIn = new List<CompanyType>()
+                    {
+                        CompanyType.CO, CompanyType.LLC, CompanyType.INC
+                    },
+                    prefectureIn = new List<Prefecture>()
+                    {
+                        Prefecture.Tochigi, Prefecture.Hokkaido
+                    }
+                });
                 Publisher publisher2 = new Publisher()
                 {
                     publisherId = null,

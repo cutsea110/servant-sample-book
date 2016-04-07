@@ -239,7 +239,7 @@ namespace ServantClientBook
             Task<Publisher> t = getPublisherAsync(publisherId);
             return t.GetAwaiter().GetResult();
         }
-        public async Task<List<Publisher>> getPublishersAsync()
+        public async Task<PublisherList> getPublishersAsync()
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/publishers");
@@ -247,11 +247,32 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
             Debug.WriteLine($"<<< {content}");
-            return JsonConvert.DeserializeObject<List<Publisher>>(content);
+            return JsonConvert.DeserializeObject<PublisherList>(content);
         }
-        public List<Publisher> getPublishers()
+        public PublisherList getPublishers()
         {
-            Task<List<Publisher>> t = getPublishersAsync();
+            Task<PublisherList> t = getPublishersAsync();
+            return t.GetAwaiter().GetResult();
+        }
+        public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition obj)
+        {
+            var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
+            var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
+            var res = await client.PostAsync($"{server}/publishers", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
+            var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
+            return JsonConvert.DeserializeObject<PublisherList>(content);
+        }
+        public PublisherList postPublishers(PublisherQueryCondition obj)
+        {
+            Task<PublisherList> t = postPublishersAsync(obj);
             return t.GetAwaiter().GetResult();
         }
         public async Task<int> postPublisherAsync(Publisher obj)

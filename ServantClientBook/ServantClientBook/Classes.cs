@@ -58,28 +58,28 @@ namespace ServantClientBook
     [JsonObject("AuthorQueryCondition")]
     public class AuthorQueryCondition
     {
-        [JsonProperty("authorNameLike")]
+        [JsonProperty(PropertyName = "authorNameLike")]
         public string authorNameLike { get; set; }
-        [JsonProperty("genderEq")]
+        [JsonProperty(PropertyName = "genderEq")]
         [JsonConverter(typeof(StringEnumConverter))]
         public Gender? genderEq { get; set; }
-        [JsonProperty("ageFrom")]
+        [JsonProperty(PropertyName = "ageFrom")]
         public int? ageFrom { get; set; }
-        [JsonProperty("ageTo")]
+        [JsonProperty(PropertyName = "ageTo")]
         public int? ageTo { get; set; }
-        [JsonProperty("prefectureIn", ItemConverterType = typeof(StringEnumConverter))]
+        [JsonProperty(PropertyName = "prefectureIn", ItemConverterType = typeof(StringEnumConverter))]
         public List<Prefecture> prefectureIn { get; set; }
     }
     [JsonObject("AuthorList")]
     public class AuthorList
     {
-        [JsonProperty("hits")]
+        [JsonProperty(PropertyName = "hits")]
         public int hits { get; set; }
-        [JsonProperty("page")]
+        [JsonProperty(PropertyName = "page")]
         public int page { get; set; }
-        [JsonProperty("per_page")]
+        [JsonProperty(PropertyName = "per_page")]
         public int per_page { get; set; }
-        [JsonProperty("result")]
+        [JsonProperty(PropertyName = "result")]
         public List<Author> result { get; set; }
     }
     #endregion
@@ -100,6 +100,28 @@ namespace ServantClientBook
         public DateTime createdAt { get; set; }
         [JsonProperty(PropertyName = "updatedAt")]
         public DateTime updatedAt { get; set; }
+    }
+    [JsonObject("PublisherQueryCondition")]
+    public class PublisherQueryCondition
+    {
+        [JsonProperty(PropertyName = "publisherNameLike")]
+        public string publisherNameLike { get; set; }
+        [JsonProperty(PropertyName = "companyTypeIn", ItemConverterType = typeof(StringEnumConverter))]
+        public List<CompanyType> companyTypeIn { get; set; }
+        [JsonProperty(PropertyName = "prefectureIn", ItemConverterType = typeof(StringEnumConverter))]
+        public List<Prefecture> prefectureIn { get; set; }
+    }
+    [JsonObject("PublisherList")]
+    public class PublisherList
+    {
+        [JsonProperty(PropertyName = "hits")]
+        public int hits { get; set; }
+        [JsonProperty(PropertyName = "page")]
+        public int page { get; set; }
+        [JsonProperty(PropertyName = "per_page")]
+        public int per_page { get; set; }
+        [JsonProperty(PropertyName = "result")]
+        public List<Publisher> result { get; set; }
     }
     #endregion
     #region Book
