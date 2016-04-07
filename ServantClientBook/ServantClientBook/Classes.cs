@@ -82,16 +82,16 @@ namespace ServantClientBook
         [JsonProperty("authorId")]
         public int authorId { get; set; }
 
-        [JsonProperty("authorName")]
-        public string authorName { get; set; }
+        [JsonProperty("name")]
+        public string name { get; set; }
     }
     [JsonObject("PublisherInfo")]
     public class PublisherInfo
     {
         [JsonProperty("publisherId")]
         public int publisherId { get; set; }
-        [JsonProperty("publisherName")]
-        public string publisherName { get; set; }
+        [JsonProperty("name")]
+        public string name { get; set; }
     }
 
     [JsonObject("Book")]
