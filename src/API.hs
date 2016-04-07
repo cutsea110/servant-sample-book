@@ -122,7 +122,7 @@ publisherServer = list :<|> new :<|> opes
 type BookAPI =
        "books" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
        (    Get '[JSON] BookList
-       :<|> ReqBody '[JSON] BookQuery :> Post '[JSON] BookList
+       :<|> ReqBody '[JSON] BookQueryCondition :> Post '[JSON] BookList
        )
   :<|> "book" :> ReqBody '[JSON] Book :> Post '[JSON] BookId
   :<|> "book" :> Capture "id" BookId :>
@@ -137,7 +137,7 @@ type BookAPI =
        )
 bookServer :: (Maybe Int -> Maybe Int ->
                     Handler BookList
-               :<|> (BookQuery -> Handler BookList)
+               :<|> (BookQueryCondition -> Handler BookList)
               )
          :<|> (Book -> Handler BookId)
          :<|> (BookId ->
@@ -152,11 +152,11 @@ bookServer :: (Maybe Int -> Maybe Int ->
                )
 bookServer = list :<|> new :<|> opes :<|> opes'
   where
-    list :: Maybe Int -> Maybe Int -> Handler BookList :<|> (BookQuery -> Handler BookList)
+    list :: Maybe Int -> Maybe Int -> Handler BookList :<|> (BookQueryCondition -> Handler BookList)
     list page per_page = get page per_page :<|> finder page per_page
     get :: Maybe Int -> Maybe Int -> Handler BookList
     get = undefined
-    finder :: Maybe Int -> Maybe Int -> BookQuery -> Handler BookList
+    finder :: Maybe Int -> Maybe Int -> BookQueryCondition -> Handler BookList
     finder = undefined
     new :: Book -> Handler BookId
     new = undefined

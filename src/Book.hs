@@ -4,7 +4,7 @@ module Book
        ( BookId(..)
        , Book(..)
          
-       , BookQuery(..)
+       , BookQueryCondition(..)
        , BookList(..)
        ) where
 
@@ -42,15 +42,16 @@ data Book = Book { bookId :: Maybe BookId
                  , updatedAt :: UTCTime
                  } deriving (Show, FromJSON, ToJSON, Generic)
 
-data BookQuery = BookQuery { bookIdEq :: Maybe BookId
-                           , bookIdIn :: Maybe [BookId]
-                           , isbnEq :: Maybe ISBN
-                           , categoryIn :: Maybe [Category]
-                           , authorNameLike :: Maybe Text
-                           , publisherNameLike :: Maybe Text
-                           , publishedFrom :: Maybe Day
-                           , publishedTo :: Maybe Day
-                           } deriving (Show, FromJSON, ToJSON, Generic)
+data BookQueryCondition
+  = BookQueryCondition { bookIdEq :: Maybe BookId
+                       , bookIdIn :: Maybe [BookId]
+                       , isbnEq :: Maybe ISBN
+                       , categoryIn :: Maybe [Category]
+                       , authorNameLike :: Maybe Text
+                       , publisherNameLike :: Maybe Text
+                       , publishedFrom :: Maybe Day
+                       , publishedTo :: Maybe Day
+                       } deriving (Show, FromJSON, ToJSON, Generic)
 
 data BookList = BookList { hits :: Integer
                          , page :: Int
