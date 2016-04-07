@@ -13,6 +13,6 @@ import Publisher (PublisherId)
 type PublisherName = Text
 
 data PublisherInfo = PublisherInfo { publisherId :: PublisherId
-                                   , publisherName :: PublisherName
+                                   , name :: PublisherName
                                    }
                      deriving (Show, FromJSON, ToJSON, Generic)
