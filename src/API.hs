@@ -132,6 +132,8 @@ type BookAPI =
        :<|> ReqBody '[JSON] Book :> Put '[JSON] ()
        :<|> Delete '[JSON] ()
        )
+  :<|> "book" :> "finder" :> QueryParam "page" Int :> QueryParam  "per_page" Int
+       :> ReqBody '[JSON] BookQuery :>Post '[JSON] ResultBookFinder
 
 bookServer :: (Maybe Int -> Maybe Int -> Handler [Book])
          :<|> (Book -> Handler BookId)
@@ -145,7 +147,8 @@ bookServer :: (Maybe Int -> Maybe Int -> Handler [Book])
                :<|> (Book -> Handler ())
                :<|> Handler ()
                )
-bookServer = list :<|> new :<|> opes :<|> opes'
+         :<|> (Maybe Int -> Maybe Int -> BookQuery -> Handler ResultBookFinder)
+bookServer = list :<|> new :<|> opes :<|> opes' :<|> finder
   where
     list :: Maybe Int -> Maybe Int -> Handler [Book]
     list = undefined
@@ -167,7 +170,8 @@ bookServer = list :<|> new :<|> opes :<|> opes'
     update' = undefined
     delete' :: ISBN -> Handler ()
     delete' = undefined
-
+    finder :: Maybe Int -> Maybe Int -> BookQuery -> Handler ResultBookFinder
+    finder = undefined
 
 type API = AddressAPI
       :<|> AuthorAPI

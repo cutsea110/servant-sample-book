@@ -80,6 +80,19 @@ instance ToSample Book where
       d = fromJust $ toSample undefined
       d1 = fromJust $ toSample undefined
 
+instance ToSample BookQuery where
+  toSamples _ = [("search query", q)]
+    where
+      q = BookQuery Nothing Nothing Nothing (Just [Science, Comics]) Nothing Nothing (Just d) Nothing
+      d = fromJust $ toSample undefined
+
+instance ToSample ResultBookFinder where
+  toSamples _ = [("search result", r)]
+    where
+      r = ResultBookFinder 2 0 50 [b1, b2]
+      b1 = fromJust $ toSample undefined
+      b2 = fromJust $ toSample undefined
+
 instance ToParam (QueryParam "page" Int) where
   toParam _ = DocQueryParam "page" ["1", "2", "3", "10"] "page number to get" Normal
   

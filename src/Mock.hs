@@ -119,5 +119,8 @@ instance Arbitrary Book where
     where
       authors = resize 3 $ listOf1 arbitrary
 
+instance Arbitrary ResultBookFinder where
+  arbitrary = ResultBookFinder <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+
 main :: IO ()
 main = run 8081 $ serve api (mock api Proxy)
