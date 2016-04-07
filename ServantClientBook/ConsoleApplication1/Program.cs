@@ -132,6 +132,7 @@ namespace ConsoleApplication1
                 api.deleteBook(book2.isbn);
 
                 #endregion
+
             }catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
