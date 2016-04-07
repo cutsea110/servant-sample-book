@@ -9,26 +9,26 @@ namespace ServantClientBook
     [JsonObject("Address")]
     public class Address
     {
-        [JsonProperty("addressId")]
+        [JsonProperty(PropertyName = "addressId")]
         public int? addressId { get; set; }
-        [JsonProperty("postcode")]
+        [JsonProperty(PropertyName = "postcode")]
         public string postcode { get; set; }
-        [JsonProperty("prefecture")]
+        [JsonProperty(PropertyName = "prefecture")]
         [JsonConverter(typeof(StringEnumConverter))]
         public Prefecture prefecture { get; set; }
-        [JsonProperty("address")]
+        [JsonProperty(PropertyName = "address")]
         public string address { get; set; }
-        [JsonProperty("building")]
+        [JsonProperty(PropertyName = "building")]
         public string building { get; set; }
-        [JsonProperty("tel")]
+        [JsonProperty(PropertyName = "tel")]
         public string tel { get; set; }
-        [JsonProperty("fax")]
+        [JsonProperty(PropertyName = "fax")]
         public string fax { get; set; }
-        [JsonProperty("email")]
+        [JsonProperty(PropertyName = "email")]
         public string email { get; set; }
-        [JsonProperty("createdAt")]
+        [JsonProperty(PropertyName = "createdAt")]
         public DateTime createdAt { get; set; }
-        [JsonProperty("updatedAt")]
+        [JsonProperty(PropertyName = "updatedAt")]
         public DateTime updatedAt { get; set; }
     }
     #endregion
@@ -36,23 +36,23 @@ namespace ServantClientBook
     [JsonObject("Author")]
     public class Author
     {
-        [JsonProperty("authorId")]
+        [JsonProperty(PropertyName = "authorId")]
         public int? authorId { get; set; }
-        [JsonProperty("name")]
+        [JsonProperty(PropertyName = "name")]
         public string name { get; set; }
-        [JsonProperty("gender")]
+        [JsonProperty(PropertyName = "gender")]
         [JsonConverter(typeof(StringEnumConverter))]
         public Gender gender { get; set; }
-        [JsonProperty("birth")]
+        [JsonProperty(PropertyName = "birth")]
         [JsonConverter(typeof(DayConverter))]
         public DateTime birth { get; set; }
-        [JsonProperty("age")]
+        [JsonProperty(PropertyName = "age")]
         public int age { get; set; }
-        [JsonProperty("address")]
+        [JsonProperty(PropertyName = "address")]
         public Address address { get; set; }
-        [JsonProperty("createdAt")]
+        [JsonProperty(PropertyName = "createdAt")]
         public DateTime createdAt { get; set; }
-        [JsonProperty("updatedAt")]
+        [JsonProperty(PropertyName = "updatedAt")]
         public DateTime updatedAt { get; set; }
     }
     #endregion
@@ -60,18 +60,18 @@ namespace ServantClientBook
     [JsonObject("Publisher")]
     public class Publisher
     {
-        [JsonProperty("publisherId")]
+        [JsonProperty(PropertyName = "publisherId")]
         public int? publisherId { get; set; }
-        [JsonProperty("name")]
+        [JsonProperty(PropertyName = "name")]
         public string name { get; set; }
-        [JsonProperty("companyType")]
+        [JsonProperty(PropertyName = "companyType")]
         [JsonConverter(typeof(StringEnumConverter))]
         public CompanyType companyType { get; set; }
-        [JsonProperty("address")]
+        [JsonProperty(PropertyName = "address")]
         public Address address { get; set; }
-        [JsonProperty("createdAt")]
+        [JsonProperty(PropertyName = "createdAt")]
         public DateTime createdAt { get; set; }
-        [JsonProperty("updatedAt")]
+        [JsonProperty(PropertyName = "updatedAt")]
         public DateTime updatedAt { get; set; }
     }
     #endregion
@@ -79,46 +79,84 @@ namespace ServantClientBook
     [JsonObject("AuthorInfo")]
     public class AuthorInfo
     {
-        [JsonProperty("authorId")]
+        [JsonProperty(PropertyName = "authorId")]
         public int authorId { get; set; }
 
-        [JsonProperty("name")]
+        [JsonProperty(PropertyName = "name")]
         public string name { get; set; }
     }
     [JsonObject("PublisherInfo")]
     public class PublisherInfo
     {
-        [JsonProperty("publisherId")]
+        [JsonProperty(PropertyName = "publisherId")]
         public int publisherId { get; set; }
-        [JsonProperty("name")]
+        [JsonProperty(PropertyName = "name")]
         public string name { get; set; }
     }
 
     [JsonObject("Book")]
     public class Book
     {
-        [JsonProperty("bookId")]
+        [JsonProperty(PropertyName = "bookId")]
         public int? bookId { get; set; }
-        [JsonProperty("title")]
+        [JsonProperty(PropertyName = "title")]
         public string title { get; set; }
-        [JsonProperty("isbn")]
+        [JsonProperty(PropertyName = "isbn")]
         public string isbn { get; set; }
-        [JsonProperty("category")]
+        [JsonProperty(PropertyName = "category")]
         [JsonConverter(typeof(StringEnumConverter))]
         public Category category { get; set; }
-        [JsonProperty("description")]
+        [JsonProperty(PropertyName = "description")]
         public string description { get; set; }
-        [JsonProperty("publishedBy")]
+        [JsonProperty(PropertyName = "publishedBy")]
         public PublisherInfo publishedBy { get; set; }
-        [JsonProperty("authors")]
+        [JsonProperty(PropertyName = "authors")]
         public List<AuthorInfo> authors { get; set; }
-        [JsonProperty("publishedAt")]
+        [JsonProperty(PropertyName = "publishedAt")]
         [JsonConverter(typeof(DayConverter))]
         public DateTime publishedAt { get; set; }
-        [JsonProperty("createdAt")]
+        [JsonProperty(PropertyName = "createdAt")]
         public DateTime createdAt { get; set; }
-        [JsonProperty("updatedAt")]
+        [JsonProperty(PropertyName = "updatedAt")]
         public DateTime updatedAt { get; set; }
+    }
+    #endregion
+    #region BookQuery
+    [JsonObject("BookQuery")]
+    public class BookQuery
+    {
+        [JsonProperty(PropertyName = "bookIdEq")]
+        public int? bookIdEq { get; set; }
+        [JsonProperty(PropertyName = "bookIdIn")]
+        public List<int> bookIdIn { get; set; }
+        [JsonProperty(PropertyName = "isbnEq")]
+        public string isbnEq { get; set; }
+        [JsonProperty(PropertyName = "categoryIn", ItemConverterType = typeof(StringEnumConverter))]
+        public List<Category> categoryIn { get; set; }
+        [JsonProperty(PropertyName = "authorNameLike")]
+        public string authorNameLike { get; set; }
+        [JsonProperty(PropertyName = "publisherNameLike")]
+        public string publisherNameLike { get; set; }
+        [JsonProperty(PropertyName = "publishedFrom")]
+        [JsonConverter(typeof(DayConverter))]
+        public DateTime? publishedFrom { get; set; }
+        [JsonProperty(PropertyName = "publishedTo")]
+        [JsonConverter(typeof(DayConverter))]
+        public DateTime? publishedTo { get; set; }
+    }
+    #endregion
+    #region BookList
+    [JsonObject("BookList")]
+    public class BookList
+    {
+        [JsonProperty(PropertyName = "hits")]
+        public int hits { get; set; }
+        [JsonProperty(PropertyName = "page")]
+        public int page { get; set; }
+        [JsonProperty(PropertyName = "per_page")]
+        public int per_page { get; set; }
+        [JsonProperty(PropertyName = "result")]
+        public List<Book> result { get; set; }
     }
     #endregion
 }

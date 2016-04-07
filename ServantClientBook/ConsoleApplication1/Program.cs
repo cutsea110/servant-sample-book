@@ -83,7 +83,17 @@ namespace ConsoleApplication1
 
                 #region Book Test
                 Book book = api.getBook(1);
-                List<Book> books = api.getBooks();
+                BookList books = api.getBooks();
+                BookList books2 = api.postBooks(new BookQuery()
+                {
+                    categoryIn = new List<Category>()
+                    {
+                        Category.Science,
+                        Category.Comics
+                    },
+                    publishedFrom = new DateTime(2010, 1, 1),
+                    publishedTo = new DateTime(2016, 12, 31)
+                });
                 Book book2 = new Book()
                 {
                     bookId = null,
@@ -122,6 +132,7 @@ namespace ConsoleApplication1
                 api.deleteBook(book2.isbn);
 
                 #endregion
+
             }catch(Exception e)
             {
                 Debug.WriteLine(e.Message);
