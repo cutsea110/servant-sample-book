@@ -121,4 +121,42 @@ namespace ServantClientBook
         public DateTime updatedAt { get; set; }
     }
     #endregion
+    #region BookQuery
+    [JsonObject("BookQuery")]
+    public class BookQuery
+    {
+        [JsonProperty("bookIdEq")]
+        public int? bookIdEq { get; set; }
+        [JsonProperty("bookIdIn")]
+        public List<int> bookIdIn { get; set; }
+        [JsonProperty("isbnEq")]
+        public string isbnEq { get; set; }
+        [JsonProperty("categoryIn", ItemConverterType = typeof(StringEnumConverter))]
+        public List<Category> categoryIn { get; set; }
+        [JsonProperty("authorNameLike")]
+        public string authorNameLike { get; set; }
+        [JsonProperty("publisherNameLike")]
+        public string publisherNameLike { get; set; }
+        [JsonProperty("publishedFrom")]
+        [JsonConverter(typeof(DayConverter))]
+        public DateTime? publishedFrom { get; set; }
+        [JsonProperty("publishedTo")]
+        [JsonConverter(typeof(DayConverter))]
+        public DateTime? publishedTo { get; set; }
+    }
+    #endregion
+    #region BookList
+    [JsonObject("BookList")]
+    public class BookList
+    {
+        [JsonProperty("hits")]
+        public int hits { get; set; }
+        [JsonProperty("page")]
+        public int page { get; set; }
+        [JsonProperty("per_page")]
+        public int per_page { get; set; }
+        [JsonProperty("result")]
+        public List<Book> result { get; set; }
+    }
+    #endregion
 }
