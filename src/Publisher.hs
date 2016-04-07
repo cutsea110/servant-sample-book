@@ -7,7 +7,7 @@ module Publisher
 
 import Data.Aeson
 import Data.Scientific (scientific, coefficient)
-import Data.Text (unpack)
+import Data.Text (Text, unpack)
 import Data.Time (UTCTime)
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
@@ -26,7 +26,7 @@ instance FromHttpApiData PublisherId where
   parseQueryParam = Right . PublisherId . read . unpack
 
 data Publisher = Publisher { publisherId :: Maybe PublisherId
-                           , name :: String
+                           , name :: Text
                            , companyType :: CompanyType
                            , address :: Address
                            , createdAt :: UTCTime

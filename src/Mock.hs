@@ -1,4 +1,5 @@
-module Test where
+{-# LANGUAGE FlexibleInstances #-}
+module Main where
 
 import Data.Scientific
 import Data.Text as T
@@ -15,7 +16,7 @@ import Types
 import Address
 import Author
 import Publisher
-import Book
+import Book as Book
 import API (api)
 
 instance Arbitrary Prefecture where
@@ -105,10 +106,16 @@ instance Arbitrary ISBN where
 instance Arbitrary Category where
   arbitrary = elements [minBound..maxBound]
 
+instance Arbitrary Book.AuthorInfo where
+  arbitrary = AuthorInfo <$> arbitrary <*> arbitrary
+
+instance Arbitrary Book.PublisherInfo where
+  arbitrary = PublisherInfo <$> arbitrary <*> arbitrary
+
 instance Arbitrary Book where
   arbitrary = Book <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> authors <*> arbitrary <*> arbitrary <*> arbitrary
     where
       authors = resize 3 $ listOf1 arbitrary
 
 main :: IO ()
-main = run 8081 $ serve api (mock api (Proxy :: Proxy '[NamedContext "test" '[]]))
+main = run 8081 $ serve api (mock api Proxy)

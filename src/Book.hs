@@ -3,11 +3,13 @@
 module Book
        ( BookId(..)
        , Book(..)
+       , AuthorInfo(..)
+       , PublisherInfo(..)
        ) where
 
 import Data.Aeson
 import Data.Scientific (scientific, coefficient)
-import Data.Text (unpack)
+import Data.Text (Text, unpack)
 import Data.Time (UTCTime)
 import Data.Time.Calendar
 import GHC.Generics
@@ -27,13 +29,26 @@ instance ToJSON BookId where
 instance FromHttpApiData BookId where
   parseQueryParam = Right . BookId . read . unpack
 
+type AuthorName = Text
+type PublisherName = Text
+
+data AuthorInfo = AuthorInfo { authorId :: AuthorId
+                             , authorName :: AuthorName
+                             }
+                  deriving (Show, FromJSON, ToJSON, Generic)
+                           
+data PublisherInfo = PublisherInfo { publisherId :: PublisherId
+                                   , publisherName :: PublisherName
+                                   }
+                     deriving (Show, FromJSON, ToJSON, Generic)
+
 data Book = Book { bookId :: Maybe BookId
-                 , title :: String
+                 , title :: Text
                  , isbn :: ISBN
                  , category :: Category
-                 , description :: String
-                 , publishedBy :: Publisher
-                 , authors :: [Author]
+                 , description :: Text
+                 , publishedBy :: PublisherInfo
+                 , authors :: [AuthorInfo]
                  , publishedAt :: Day
                  , createdAt :: UTCTime
                  , updatedAt :: UTCTime
