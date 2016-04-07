@@ -80,16 +80,16 @@ instance ToSample Book where
       d = fromJust $ toSample undefined
       d1 = fromJust $ toSample undefined
 
-instance ToSample BookQuery where
+instance ToSample BookQueryCondition where
   toSamples _ = [("search query", q)]
     where
-      q = BookQuery Nothing Nothing Nothing (Just [Science, Comics]) Nothing Nothing (Just d) Nothing
+      q = BookQueryCondition Nothing (Just [BookId 1, BookId 2]) Nothing (Just [Science, Comics]) Nothing Nothing d Nothing
       d = fromJust $ toSample undefined
 
-instance ToSample ResultBookFinder where
+instance ToSample BookList where
   toSamples _ = [("search result", r)]
     where
-      r = ResultBookFinder 2 0 50 [b1, b2]
+      r = BookList 2 0 50 [b1, b2]
       b1 = fromJust $ toSample undefined
       b2 = fromJust $ toSample undefined
 
