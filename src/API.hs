@@ -120,7 +120,10 @@ publisherServer = list :<|> new :<|> opes
 
 
 type BookAPI =
-       "books" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Book]
+       "books" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       (    Get '[JSON] BookList
+       :<|> ReqBody '[JSON] BookQuery :> Post '[JSON] BookList
+       )
   :<|> "book" :> ReqBody '[JSON] Book :> Post '[JSON] BookId
   :<|> "book" :> Capture "id" BookId :>
        (    Get '[JSON] Book
@@ -132,10 +135,10 @@ type BookAPI =
        :<|> ReqBody '[JSON] Book :> Put '[JSON] ()
        :<|> Delete '[JSON] ()
        )
-  :<|> "book" :> "finder" :> QueryParam "page" Int :> QueryParam  "per_page" Int
-       :> ReqBody '[JSON] BookQuery :>Post '[JSON] ResultBookFinder
-
-bookServer :: (Maybe Int -> Maybe Int -> Handler [Book])
+bookServer :: (Maybe Int -> Maybe Int ->
+                    Handler BookList
+               :<|> (BookQuery -> Handler BookList)
+              )
          :<|> (Book -> Handler BookId)
          :<|> (BookId ->
                     Handler Book
@@ -147,11 +150,14 @@ bookServer :: (Maybe Int -> Maybe Int -> Handler [Book])
                :<|> (Book -> Handler ())
                :<|> Handler ()
                )
-         :<|> (Maybe Int -> Maybe Int -> BookQuery -> Handler ResultBookFinder)
-bookServer = list :<|> new :<|> opes :<|> opes' :<|> finder
+bookServer = list :<|> new :<|> opes :<|> opes'
   where
-    list :: Maybe Int -> Maybe Int -> Handler [Book]
-    list = undefined
+    list :: Maybe Int -> Maybe Int -> Handler BookList :<|> (BookQuery -> Handler BookList)
+    list page per_page = get page per_page :<|> finder page per_page
+    get :: Maybe Int -> Maybe Int -> Handler BookList
+    get = undefined
+    finder :: Maybe Int -> Maybe Int -> BookQuery -> Handler BookList
+    finder = undefined
     new :: Book -> Handler BookId
     new = undefined
     opes :: BookId -> Handler Book :<|> (Book -> Handler ()) :<|> Handler ()
@@ -170,8 +176,6 @@ bookServer = list :<|> new :<|> opes :<|> opes' :<|> finder
     update' = undefined
     delete' :: ISBN -> Handler ()
     delete' = undefined
-    finder :: Maybe Int -> Maybe Int -> BookQuery -> Handler ResultBookFinder
-    finder = undefined
 
 type API = AddressAPI
       :<|> AuthorAPI

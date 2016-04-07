@@ -5,7 +5,7 @@ module Book
        , Book(..)
          
        , BookQuery(..)
-       , ResultBookFinder(..)
+       , BookList(..)
        ) where
 
 import Data.Aeson
@@ -52,8 +52,8 @@ data BookQuery = BookQuery { bookIdEq :: Maybe BookId
                            , publishedTo :: Maybe Day
                            } deriving (Show, FromJSON, ToJSON, Generic)
 
-data ResultBookFinder = ResultBookFinder { hits :: Integer
-                                         , page :: Int
-                                         , per_page :: Int
-                                         , result :: [Book]
-                                         } deriving (Show, FromJSON, ToJSON, Generic)
+data BookList = BookList { hits :: Integer
+                         , page :: Int
+                         , per_page :: Int
+                         , result :: [Book]
+                         } deriving (Show, FromJSON, ToJSON, Generic)
