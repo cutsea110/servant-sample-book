@@ -41,7 +41,16 @@ namespace ConsoleApplication1
 
                 #region Author Test
                 Author author = api.getAuthor(1);
-                List<Author> authors = api.getAuthors();
+                AuthorList authors = api.getAuthors();
+                AuthorList authors2 = api.postAuthors(new AuthorQueryCondition()
+                {
+                    genderEq=Gender.Female,
+                    authorNameLike="伊東",
+                    prefectureIn = new List<Prefecture>()
+                    {
+                        Prefecture.Tochigi,Prefecture.Saga
+                    }
+                });
                 Author author2 = new Author()
                 {
                     authorId = null,
@@ -84,7 +93,7 @@ namespace ConsoleApplication1
                 #region Book Test
                 Book book = api.getBook(1);
                 BookList books = api.getBooks();
-                BookList books2 = api.postBooks(new BookQuery()
+                BookList books2 = api.postBooks(new BookQueryCondition()
                 {
                     categoryIn = new List<Category>()
                     {

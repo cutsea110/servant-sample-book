@@ -24,7 +24,7 @@ namespace ServantClientBook
             server = _server;
         }
         #endregion
-        #region Address API
+        #region Address
         public async Task<Address> getAddressAsync(int addressId)
         {
             var client = new ServantClient();
@@ -129,7 +129,7 @@ namespace ServantClientBook
             Task<Author> t = getAuthorAsync(authorId);
             return t.GetAwaiter().GetResult();
         }
-        public async Task<List<Author>> getAuthorsAsync()
+        public async Task<AuthorList> getAuthorsAsync()
         {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/authors");
@@ -137,11 +137,32 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
             Debug.WriteLine($"<<< {content}");
-            return JsonConvert.DeserializeObject<List<Author>>(content);
+            return JsonConvert.DeserializeObject<AuthorList>(content);
         }
-        public List<Author> getAuthors()
+        public AuthorList getAuthors()
         {
-            Task<List<Author>> t = getAuthorsAsync();
+            Task<AuthorList> t = getAuthorsAsync();
+            return t.GetAwaiter().GetResult();
+        }
+        public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition obj)
+        {
+            var client = new ServantClient();
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(obj, Formatting.Indented);
+#else
+            var jsonObj = JsonConvert.SerializeObject(obj);
+#endif
+            var res = await client.PostAsync($"{server}/authors", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
+            var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
+            return JsonConvert.DeserializeObject<AuthorList>(content);
+        }
+        public AuthorList postAuthors(AuthorQueryCondition obj)
+        {
+            Task<AuthorList> t = postAuthorsAsync(obj);
             return t.GetAwaiter().GetResult();
         }
         public async Task<int> postAuthorAsync(Author obj)
@@ -337,7 +358,7 @@ namespace ServantClientBook
             Task<BookList> t = getBooksAsync();
             return t.GetAwaiter().GetResult();
         }
-        public async Task<BookList> postBooksAsync(BookQuery obj)
+        public async Task<BookList> postBooksAsync(BookQueryCondition obj)
         {
             var client = new ServantClient();
 #if DEBUG
@@ -353,7 +374,7 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<BookList>(content);
         }
-        public BookList postBooks(BookQuery obj)
+        public BookList postBooks(BookQueryCondition obj)
         {
             Task<BookList> t = postBooksAsync(obj);
             return t.GetAwaiter().GetResult();

@@ -55,6 +55,33 @@ namespace ServantClientBook
         [JsonProperty(PropertyName = "updatedAt")]
         public DateTime updatedAt { get; set; }
     }
+    [JsonObject("AuthorQueryCondition")]
+    public class AuthorQueryCondition
+    {
+        [JsonProperty("authorNameLike")]
+        public string authorNameLike { get; set; }
+        [JsonProperty("genderEq")]
+        [JsonConverter(typeof(StringEnumConverter))]
+        public Gender? genderEq { get; set; }
+        [JsonProperty("ageFrom")]
+        public int? ageFrom { get; set; }
+        [JsonProperty("ageTo")]
+        public int? ageTo { get; set; }
+        [JsonProperty("prefectureIn", ItemConverterType = typeof(StringEnumConverter))]
+        public List<Prefecture> prefectureIn { get; set; }
+    }
+    [JsonObject("AuthorList")]
+    public class AuthorList
+    {
+        [JsonProperty("hits")]
+        public int hits { get; set; }
+        [JsonProperty("page")]
+        public int page { get; set; }
+        [JsonProperty("per_page")]
+        public int per_page { get; set; }
+        [JsonProperty("result")]
+        public List<Author> result { get; set; }
+    }
     #endregion
     #region Publisher
     [JsonObject("Publisher")]
@@ -121,9 +148,9 @@ namespace ServantClientBook
         public DateTime updatedAt { get; set; }
     }
     #endregion
-    #region BookQuery
-    [JsonObject("BookQuery")]
-    public class BookQuery
+    #region BookQueryCondition
+    [JsonObject("BookQueryCondition")]
+    public class BookQueryCondition
     {
         [JsonProperty(PropertyName = "bookIdEq")]
         public int? bookIdEq { get; set; }
