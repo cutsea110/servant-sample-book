@@ -56,7 +56,10 @@ addressServer = list :<|> new :<|> opes
     delete = undefined
 
 type AuthorAPI =
-       "authors" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Author]
+       "authors" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       (    Get '[JSON] AuthorList
+       :<|> ReqBody '[JSON] AuthorQueryCondition :> Post '[JSON] AuthorList
+       )
   :<|> "author" :> ReqBody '[JSON] Author :> Post '[JSON] AuthorId
   :<|> "author" :> Capture "id" AuthorId :>
        (    Get '[JSON] Author
@@ -64,7 +67,10 @@ type AuthorAPI =
        :<|> Delete '[JSON] ()
        )
 
-authorServer :: (Maybe Int -> Maybe Int -> Handler [Author])
+authorServer :: (Maybe Int -> Maybe Int ->
+                      Handler AuthorList
+                 :<|> (AuthorQueryCondition -> Handler AuthorList)
+                )
            :<|> (Author -> Handler AuthorId)
            :<|> (AuthorId ->
                       Handler Author
@@ -73,8 +79,12 @@ authorServer :: (Maybe Int -> Maybe Int -> Handler [Author])
                 )
 authorServer = list :<|> new :<|> opes
   where
-    list :: Maybe Int -> Maybe Int -> Handler [Author]
-    list = undefined
+    list :: Maybe Int -> Maybe Int -> Handler AuthorList :<|> (AuthorQueryCondition -> Handler AuthorList)
+    list page per_page = get page per_page :<|> finder page per_page
+    get :: Maybe Int -> Maybe Int -> Handler AuthorList
+    get = undefined
+    finder :: Maybe Int -> Maybe Int -> AuthorQueryCondition -> Handler AuthorList
+    finder = undefined
     new :: Author -> Handler AuthorId
     new = undefined
     opes :: AuthorId -> Handler Author :<|> (Author -> Handler ()) :<|> Handler ()
@@ -88,7 +98,10 @@ authorServer = list :<|> new :<|> opes
        
 
 type PublisherAPI =
-       "publishers" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Publisher]
+       "publishers" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       (    Get '[JSON] PublisherList
+       :<|> ReqBody '[JSON] PublisherQueryCondition :> Post '[JSON] PublisherList
+       )
   :<|> "publisher" :> ReqBody '[JSON] Publisher :> Post '[JSON] PublisherId
   :<|> "publisher" :> Capture "id" PublisherId :>
        (    Get '[JSON] Publisher
@@ -96,7 +109,10 @@ type PublisherAPI =
        :<|> Delete '[JSON] ()
        )
 
-publisherServer :: (Maybe Int -> Maybe Int -> Handler [Publisher])
+publisherServer :: (Maybe Int -> Maybe Int ->
+                         Handler PublisherList
+                    :<|> (PublisherQueryCondition -> Handler PublisherList)
+                    )
               :<|> (Publisher -> Handler PublisherId)
               :<|> (PublisherId ->
                         Handler Publisher
@@ -105,8 +121,12 @@ publisherServer :: (Maybe Int -> Maybe Int -> Handler [Publisher])
                    )
 publisherServer = list :<|> new :<|> opes
   where
-    list :: Maybe Int -> Maybe Int -> Handler [Publisher]
-    list = undefined
+    list :: Maybe Int -> Maybe Int -> Handler PublisherList :<|> (PublisherQueryCondition -> Handler PublisherList)
+    list page per_page = get page per_page :<|> finder page per_page
+    get :: Maybe Int -> Maybe Int -> Handler PublisherList
+    get = undefined
+    finder :: Maybe Int -> Maybe Int -> PublisherQueryCondition -> Handler PublisherList
+    finder = undefined
     new :: Publisher -> Handler PublisherId
     new = undefined
     opes :: PublisherId -> Handler Publisher :<|> (Publisher -> Handler ()) :<|> Handler ()

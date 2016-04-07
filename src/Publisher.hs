@@ -3,6 +3,9 @@
 module Publisher
        ( PublisherId(..)
        , Publisher(..)
+
+       , PublisherQueryCondition(..)
+       , PublisherList(..)
        ) where
 
 import Data.Aeson
@@ -32,3 +35,15 @@ data Publisher = Publisher { publisherId :: Maybe PublisherId
                            , createdAt :: UTCTime
                            , updatedAt :: UTCTime
                            } deriving (Show, FromJSON, ToJSON, Generic)
+
+data PublisherQueryCondition
+  = PublisherQueryCondition { publisherNameLike :: Maybe Text
+                            , companyTypeIn :: Maybe [CompanyType]
+                            , prefectureIn :: Maybe [Prefecture]
+                            } deriving (Show, FromJSON, ToJSON, Generic)
+
+data PublisherList = PublisherList { hits :: Integer
+                                   , page :: Int
+                                   , per_page :: Int
+                                   , result :: [Publisher]
+                                   } deriving (Show, FromJSON, ToJSON, Generic)

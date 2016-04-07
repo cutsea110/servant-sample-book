@@ -43,6 +43,18 @@ instance ToSample Publisher where
       d1 = fromJust $ toSample undefined
       d2 = fromJust $ toSample undefined
 
+instance ToSample PublisherQueryCondition where
+  toSamples _ = [("search query", q)]
+    where
+      q = PublisherQueryCondition Nothing Nothing Nothing
+
+instance ToSample PublisherList where
+  toSamples _ = [("search result", r)]
+    where
+      r = PublisherList 2 0 50 [p1, p2]
+      p1 = fromJust $ toSample undefined
+      p2 = fromJust $ toSample undefined
+
 instance ToSample DiffTime where
   toSamples _ = [("difftime", secondsToDiffTime s)]
     where
@@ -64,6 +76,18 @@ instance ToSample Author where
       d = fromJust $ toSample undefined
       d1 = fromJust $ toSample undefined
       d2 = fromJust $ toSample undefined
+
+instance ToSample AuthorQueryCondition where
+  toSamples _ = [("search query", q)]
+    where
+      q = AuthorQueryCondition Nothing (Just Male) Nothing Nothing (Just [Tokyo, Osaka])
+
+instance ToSample AuthorList where
+  toSamples _ = [("search result", r)]
+    where
+      r = AuthorList 2 0 50 [a1, a2]
+      a1 = fromJust $ toSample undefined
+      a2 = fromJust $ toSample undefined
 
 instance ToSample Address where
   toSamples _ = [("address", Address (Just (AddressId 1)) (Postcode "134-0091") Tokyo "Funabori, Edogawa" "Crest.F.SS" (Tel "090-4134-5069") (Fax "03-3356-7662") (Emailaddress "cutsea110@gmail.com") d1 d2)]

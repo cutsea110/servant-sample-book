@@ -3,6 +3,9 @@
 module Author
        ( AuthorId(..)
        , Author(..)
+
+       , AuthorQueryCondition(..)
+       , AuthorList(..)
        ) where
 
 import Data.Aeson
@@ -35,3 +38,17 @@ data Author = Author { authorId :: Maybe AuthorId
                      , createdAt :: UTCTime
                      , updatedAt :: UTCTime
                      } deriving (Show, FromJSON, ToJSON, Generic)
+
+data AuthorQueryCondition
+  = AuthorQueryCondition { authorNameLike :: Maybe Text
+                         , genderEq :: Maybe Gender
+                         , ageFrom :: Maybe Int
+                         , ageTo :: Maybe Int
+                         , prefectureIn :: Maybe [Prefecture]
+                         } deriving (Show, FromJSON, ToJSON, Generic)
+
+data AuthorList = AuthorList { hits :: Integer
+                             , page :: Int
+                             , per_page :: Int
+                             , result :: [Author]
+                             } deriving (Show, FromJSON, ToJSON, Generic)
