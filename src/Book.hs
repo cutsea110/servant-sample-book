@@ -13,6 +13,7 @@ import Data.Scientific (scientific, coefficient)
 import Data.Text (Text, unpack)
 import Data.Time (UTCTime)
 import Data.Time.Calendar
+import Data.Typeable
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
 
@@ -20,7 +21,7 @@ import Types
 import AuthorInfo
 import PublisherInfo
 
-newtype BookId = BookId { getBookId :: Integer } deriving (Show, Generic)
+newtype BookId = BookId { getBookId :: Integer } deriving (Show, Generic, Typeable)
 
 instance FromJSON BookId where
   parseJSON (Number v) = BookId <$> pure (coefficient v)
@@ -40,7 +41,7 @@ data Book = Book { bookId :: Maybe BookId
                  , publishedAt :: Day
                  , createdAt :: UTCTime
                  , updatedAt :: UTCTime
-                 } deriving (Show, FromJSON, ToJSON, Generic)
+                 } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
 
 data BookQueryCondition
   = BookQueryCondition { bookIdEq :: Maybe BookId
@@ -51,10 +52,10 @@ data BookQueryCondition
                        , publisherNameLike :: Maybe Text
                        , publishedFrom :: Maybe Day
                        , publishedTo :: Maybe Day
-                       } deriving (Show, FromJSON, ToJSON, Generic)
+                       } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
 
 data BookList = BookList { hits :: Integer
                          , page :: Int
                          , per_page :: Int
                          , result :: [Book]
-                         } deriving (Show, FromJSON, ToJSON, Generic)
+                         } deriving (Show, FromJSON, ToJSON, Generic, Typeable)

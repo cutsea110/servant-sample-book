@@ -15,6 +15,7 @@ module Types
 import GHC.Generics
 import Data.Aeson
 import Data.Text
+import Data.Typeable
 import Servant.API
 
 data Prefecture = Hokkaido
@@ -26,10 +27,10 @@ data Prefecture = Hokkaido
                 | Tokushima | Kagawa | Ehime | Kochi
                 | Fukuoka | Saga | Nagasaki | Kumamoto | Oita | Miyazaki | Kagoshima
                 | Okinawa
-                deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum)
+                deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum, Typeable)
 
 
-newtype Postcode = Postcode { getPostcode :: Text } deriving (Show, Generic)
+newtype Postcode = Postcode { getPostcode :: Text } deriving (Show, Generic, Typeable)
 
 instance FromJSON Postcode where
   parseJSON (String v) = return $ Postcode v
@@ -37,7 +38,7 @@ instance FromJSON Postcode where
 instance ToJSON Postcode where
   toJSON = String . getPostcode
 
-newtype Tel = Tel { getTel :: Text } deriving (Show, Generic)
+newtype Tel = Tel { getTel :: Text } deriving (Show, Generic, Typeable)
 
 instance FromJSON Tel where
   parseJSON (String v) = return $ Tel v
@@ -45,7 +46,7 @@ instance FromJSON Tel where
 instance ToJSON Tel where
   toJSON = String . getTel
 
-newtype Fax = Fax { getFax :: Text } deriving (Show, Generic)
+newtype Fax = Fax { getFax :: Text } deriving (Show, Generic, Typeable)
 
 instance FromJSON Fax where
   parseJSON (String v) = return $ Fax v
@@ -53,7 +54,7 @@ instance FromJSON Fax where
 instance ToJSON Fax where
   toJSON = String . getFax
 
-newtype Emailaddress = Emailaddress { getEmailaddress :: Text } deriving (Show, Generic)
+newtype Emailaddress = Emailaddress { getEmailaddress :: Text } deriving (Show, Generic, Typeable)
 
 instance FromJSON Emailaddress where
   parseJSON (String v) = return $ Emailaddress v
@@ -63,14 +64,14 @@ instance ToJSON Emailaddress where
 
 data Gender = Female
             | Male
-            deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum)
+            deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum, Typeable)
 
 data CompanyType = CO
                  | INC
                  | COM
                  | LLC
                  | COLTD
-                 deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum)
+                 deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum, Typeable)
 
 data Category = Science
               | Computer
@@ -78,9 +79,9 @@ data Category = Science
               | Textbook
               | Comics
               | Magazine
-              deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum)
+              deriving (Show, FromJSON, ToJSON, Generic, Bounded, Enum, Typeable)
 
-newtype ISBN = ISBN {getISBN :: Text} deriving (Show, Generic)
+newtype ISBN = ISBN {getISBN :: Text} deriving (Show, Generic, Typeable)
 
 instance FromJSON ISBN where
   parseJSON (String v) = return $ ISBN v

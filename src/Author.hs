@@ -12,6 +12,7 @@ import Data.Aeson
 import Data.Text (Text, unpack)
 import Data.Time (UTCTime)
 import Data.Time.Calendar
+import Data.Typeable
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
 
@@ -19,7 +20,7 @@ import Data.Scientific (scientific, coefficient)
 import Types
 import Address
 
-newtype AuthorId = AuthorId { getAuthorId :: Integer } deriving (Show, Generic)
+newtype AuthorId = AuthorId { getAuthorId :: Integer } deriving (Show, Generic, Typeable)
 
 instance FromJSON AuthorId where
   parseJSON (Number v) = AuthorId <$> pure (coefficient v)
@@ -37,7 +38,7 @@ data Author = Author { authorId :: Maybe AuthorId
                      , address :: Address
                      , createdAt :: UTCTime
                      , updatedAt :: UTCTime
-                     } deriving (Show, FromJSON, ToJSON, Generic)
+                     } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
 
 data AuthorQueryCondition
   = AuthorQueryCondition { authorNameLike :: Maybe Text
@@ -45,10 +46,10 @@ data AuthorQueryCondition
                          , ageFrom :: Maybe Int
                          , ageTo :: Maybe Int
                          , prefectureIn :: Maybe [Prefecture]
-                         } deriving (Show, FromJSON, ToJSON, Generic)
+                         } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
 
 data AuthorList = AuthorList { hits :: Integer
                              , page :: Int
                              , per_page :: Int
                              , result :: [Author]
-                             } deriving (Show, FromJSON, ToJSON, Generic)
+                             } deriving (Show, FromJSON, ToJSON, Generic, Typeable)

@@ -9,11 +9,12 @@ import Data.Aeson
 import Data.Scientific (scientific, coefficient)
 import Data.Text (Text, unpack)
 import Data.Time
+import Data.Typeable
 import GHC.Generics
 import Types
 import Servant.API (FromHttpApiData(..))
 
-newtype AddressId = AddressId { getAddressId :: Integer } deriving (Show, Generic)
+newtype AddressId = AddressId { getAddressId :: Integer } deriving (Show, Generic, Typeable)
 
 instance FromJSON AddressId where
   parseJSON (Number v) = AddressId <$> pure (coefficient v)
@@ -33,4 +34,4 @@ data Address = Address { addressId :: Maybe AddressId
                        , email :: Emailaddress
                        , createdAt :: UTCTime
                        , updatedAt :: UTCTime
-                       } deriving (Show, FromJSON, ToJSON, Generic)
+                       } deriving (Show, FromJSON, ToJSON, Generic, Typeable)

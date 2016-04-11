@@ -10,6 +10,7 @@ import Data.Monoid ((<>))
 import Data.Text
 import Data.Time (UTCTime)
 import Data.Time.Calendar (Day)
+import Data.Typeable
 import Data.Proxy
 import Servant.Foreign
 
@@ -23,9 +24,6 @@ import Book
 import API (api)
 
 data CSharp
-
-instance HasForeignType CSharp Text a => HasForeignType CSharp Text [a] where
-    typeFor lang ftype (Proxy :: Proxy [a]) = "List<" <> typeFor lang ftype (Proxy :: Proxy a) <> ">"
 
 instance HasForeignType CSharp Text Int where
     typeFor _ _ _ = "int"
@@ -96,7 +94,6 @@ instance HasForeignType CSharp Text AuthorQueryCondition where
 instance HasForeignType CSharp Text AuthorInfo where
     typeFor _ _ _ = "AuthorInfo"
 
-
 instance HasForeignType CSharp Text Publisher where
     typeFor _ _ _ = "Publisher"
 instance HasForeignType CSharp Text PublisherId where
@@ -118,6 +115,9 @@ instance HasForeignType CSharp Text BookList where
 instance HasForeignType CSharp Text BookQueryCondition where
     typeFor _ _ _ = "BookQueryCondition"
 
+instance HasForeignType CSharp Text a => HasForeignType CSharp Text [a] where
+    typeFor lang ftype (Proxy :: Proxy [t]) = "List<" <> typeFor lang ftype (Proxy :: Proxy t) <> ">"
+
 instance HasForeignType CSharp Text () where
     typeFor _ _ _ = "void"
 
@@ -126,4 +126,3 @@ getEndpoints = listFromAPI (Proxy :: Proxy CSharp) (Proxy :: Proxy Text) api
 
 main :: IO ()
 main = putStrLn "developing"
-
