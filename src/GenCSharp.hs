@@ -51,28 +51,28 @@ instance HasForeignType CSharp Text (Maybe String) where
     typeFor _ _ _ = "string"
 
 instance HasForeignType CSharp Text Prefecture where
-    typeFor _ _ _ = "enum Prefecture"
+    typeFor _ _ _ = "Prefecture"
 
 instance HasForeignType CSharp Text Postcode where
-    typeFor _ _ _ = "enum Postcode"
+    typeFor _ _ _ = "Postcode"
 
 instance HasForeignType CSharp Text Tel where
-    typeFor _ _ _ = "enum Tel"
+    typeFor _ _ _ = "Tel"
 
 instance HasForeignType CSharp Text Fax where
-    typeFor _ _ _ = "enum Fax"
+    typeFor _ _ _ = "Fax"
 
 instance HasForeignType CSharp Text Emailaddress where
-    typeFor _ _ _ = "enum Emailaddress"
+    typeFor _ _ _ = "Emailaddress"
 
 instance HasForeignType CSharp Text Gender where
-    typeFor _ _ _ = "enum Gender"
+    typeFor _ _ _ = "Gender"
 
 instance HasForeignType CSharp Text CompanyType where
-    typeFor _ _ _ = "enum CompanyType"
+    typeFor _ _ _ = "CompanyType"
 
 instance HasForeignType CSharp Text Category where
-    typeFor _ _ _ = "enum Category"
+    typeFor _ _ _ = "Category"
 
 instance HasForeignType CSharp Text ISBN where
     typeFor _ _ _ = "string"
