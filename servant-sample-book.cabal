@@ -24,6 +24,7 @@ executable book-server
                      , DeriveAnyClass
                      , DeriveGeneric
                      , TypeOperators
+                     , MultiParamTypeClasses
   build-depends:       QuickCheck >=2.8 && <2.9
                      , aeson >=0.11 && <0.12
                      , base >=4.8 && <4.9
@@ -32,6 +33,7 @@ executable book-server
                      , scientific >= 0.3.4.6
                      , servant >=0.6 && <0.7
                      , servant-docs >=0.6 && <0.7
+                     , servant-foreign >= 0.6.1
                      , servant-js >= 0.6
                      , servant-mock >=0.6 && <0.7
                      , servant-server >=0.6 && <0.7
@@ -50,8 +52,12 @@ executable mock-server
                      , DataKinds
                      , DeriveAnyClass
                      , DeriveGeneric
+                     , FlexibleContexts
                      , FlexibleInstances
+                     , MultiParamTypeClasses
+                     , ScopedTypeVariables
                      , TypeOperators
+                     , TypeSynonymInstances
   build-depends:       QuickCheck >=2.8 && <2.9
                      , aeson >=0.11 && <0.12
                      , base >=4.8 && <4.9
@@ -60,6 +66,7 @@ executable mock-server
                      , scientific >= 0.3.4.6
                      , servant >=0.6 && <0.7
                      , servant-docs >=0.6 && <0.7
+                     , servant-foreign >= 0.6.1
                      , servant-js >= 0.6
                      , servant-mock >=0.6 && <0.7
                      , servant-server >=0.6 && <0.7
