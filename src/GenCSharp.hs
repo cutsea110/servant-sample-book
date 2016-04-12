@@ -6,6 +6,7 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module GenCSharp where
 
+import Control.Lens
 import Data.Monoid ((<>))
 import Data.Text
 import Data.Time (UTCTime)
@@ -61,6 +62,9 @@ instance {-# OVERLAPS #-} Typeable t => HasForeignType CSharp Text t where
 
 getEndpoints :: [Req Text]
 getEndpoints = listFromAPI (Proxy :: Proxy CSharp) (Proxy :: Proxy Text) api
+
+generateCSharpCs :: Req Text -> Text
+generateCSharpCs req = undefined
 
 main :: IO ()
 main = putStrLn "developing"
