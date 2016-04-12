@@ -3,6 +3,18 @@ using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 
+#region type alias
+using AddressId = System.Int64;
+using AuthorId = System.Int64;
+using PublisherId = System.Int64;
+using BookId = System.Int64;
+using ISBN = System.String;
+using Postcode = System.String;
+using Tel = System.String;
+using Fax = System.String;
+using Emailaddress = System.String;
+#endregion
+
 namespace ServantClientBook
 {
     #region Address
@@ -10,9 +22,9 @@ namespace ServantClientBook
     public class Address
     {
         [JsonProperty(PropertyName = "addressId")]
-        public int? addressId { get; set; }
+        public Nullable<AddressId> addressId { get; set; }
         [JsonProperty(PropertyName = "postcode")]
-        public string postcode { get; set; }
+        public Postcode postcode { get; set; }
         [JsonProperty(PropertyName = "prefecture")]
         [JsonConverter(typeof(StringEnumConverter))]
         public Prefecture prefecture { get; set; }
@@ -21,11 +33,11 @@ namespace ServantClientBook
         [JsonProperty(PropertyName = "building")]
         public string building { get; set; }
         [JsonProperty(PropertyName = "tel")]
-        public string tel { get; set; }
+        public Tel tel { get; set; }
         [JsonProperty(PropertyName = "fax")]
-        public string fax { get; set; }
+        public Fax fax { get; set; }
         [JsonProperty(PropertyName = "email")]
-        public string email { get; set; }
+        public Emailaddress email { get; set; }
         [JsonProperty(PropertyName = "createdAt")]
         public DateTime createdAt { get; set; }
         [JsonProperty(PropertyName = "updatedAt")]
@@ -37,7 +49,7 @@ namespace ServantClientBook
     public class Author
     {
         [JsonProperty(PropertyName = "authorId")]
-        public int? authorId { get; set; }
+        public Nullable<AuthorId> authorId { get; set; }
         [JsonProperty(PropertyName = "name")]
         public string name { get; set; }
         [JsonProperty(PropertyName = "gender")]
@@ -88,7 +100,7 @@ namespace ServantClientBook
     public class Publisher
     {
         [JsonProperty(PropertyName = "publisherId")]
-        public int? publisherId { get; set; }
+        public Nullable<PublisherId> publisherId { get; set; }
         [JsonProperty(PropertyName = "name")]
         public string name { get; set; }
         [JsonProperty(PropertyName = "companyType")]
@@ -147,11 +159,11 @@ namespace ServantClientBook
     public class Book
     {
         [JsonProperty(PropertyName = "bookId")]
-        public int? bookId { get; set; }
+        public Nullable<BookId> bookId { get; set; }
         [JsonProperty(PropertyName = "title")]
         public string title { get; set; }
         [JsonProperty(PropertyName = "isbn")]
-        public string isbn { get; set; }
+        public ISBN isbn { get; set; }
         [JsonProperty(PropertyName = "category")]
         [JsonConverter(typeof(StringEnumConverter))]
         public Category category { get; set; }

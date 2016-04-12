@@ -15,7 +15,7 @@ namespace ConsoleApplication1
         {
             try
             {
-                var api = new API("http://192.168.11.3:8081");
+                var api = new API("http://192.168.91.130:8081");
 
                 #region Address Test
                 Address address = api.getAddress(1);
@@ -153,7 +153,8 @@ namespace ConsoleApplication1
 
                 #endregion
 
-            }catch(Exception e)
+            }
+            catch (Exception e)
             {
                 Debug.WriteLine(e.Message);
             }
