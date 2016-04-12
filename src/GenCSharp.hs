@@ -30,14 +30,6 @@ import API (api)
 
 data CSharp
 
-instance (HasForeignType CSharp t a, HasForeignType CSharp t' a)
-    => HasForeignType CSharp (t, t') a where
-        typeFor lang (Proxy :: Proxy (t, t')) p
-            = (typeFor lang (Proxy :: Proxy t) p, typeFor lang (Proxy :: Proxy t') p)
-
-instance Typeable a => HasForeignType CSharp TypeRep a where
-    typeFor _ _ p = typeRep p
-
 instance HasForeignType CSharp Text a => HasForeignType CSharp Text [a] where
     typeFor lang ftype (Proxy :: Proxy [t]) = "List<" <> typeFor lang ftype (Proxy :: Proxy t) <> ">"
 
@@ -77,9 +69,6 @@ instance {-# OVERLAPS #-} Typeable t => HasForeignType CSharp Text t where
 
 getEndpoints :: [Req Text]
 getEndpoints = listFromAPI (Proxy :: Proxy CSharp) (Proxy :: Proxy Text) api
-
-getEndpoints' :: [Req (Text, TypeRep)]
-getEndpoints' = listFromAPI (Proxy :: Proxy CSharp) (Proxy :: Proxy (Text, TypeRep)) api
 
 data CSharpOption = CSharpOption { prefix :: Text
                                  , jsonRequestBodyName ::Text
