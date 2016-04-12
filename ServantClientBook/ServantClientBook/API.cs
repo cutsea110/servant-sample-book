@@ -16,6 +16,7 @@ using Postcode = System.String;
 using Tel = System.String;
 using Fax = System.String;
 using Emailaddress = System.String;
+using System.Linq;
 #endregion
 
 
@@ -53,19 +54,24 @@ namespace ServantClientBook
             Task<Address> t = getAddressAsync(addressId);
             return t.GetAwaiter().GetResult();
         }
-        public async Task<List<Address>> getAddressesAsync()
+        public async Task<List<Address>> getAddressesAsync(int? page=null, int? per_page=null)
         {
             var client = new ServantClient();
-            var res = await client.GetAsync($"{server}/addresses");
+            var queryparams = new List<string> {
+                page.HasValue ? $"page={page.Value}" : null,
+                per_page.HasValue ? $"per_page={per_page.Value}" : null
+            }.Where(e => !string.IsNullOrEmpty(e));
+            var qp = queryparams.Count() > 0 ? $"?{string.Join("&", queryparams)}" : "";
+            var res = await client.GetAsync($"{server}/addresses{qp}");
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<List<Address>>(content);
         }
-        public List<Address> getAddresses()
+        public List<Address> getAddresses(int? page = null, int? per_page = null)
         {
-            Task<List<Address>> t = getAddressesAsync();
+            Task<List<Address>> t = getAddressesAsync(page, per_page);
             return t.GetAwaiter().GetResult();
         }
         public async Task<int> postAddressAsync(Address obj)
@@ -142,19 +148,24 @@ namespace ServantClientBook
             Task<Author> t = getAuthorAsync(authorId);
             return t.GetAwaiter().GetResult();
         }
-        public async Task<AuthorList> getAuthorsAsync()
+        public async Task<AuthorList> getAuthorsAsync(int? page=null, int? per_page=null)
         {
             var client = new ServantClient();
-            var res = await client.GetAsync($"{server}/authors");
+            var queryparams = new List<string> {
+                page.HasValue ? $"page={page.Value}" : null,
+                per_page.HasValue ? $"per_page={per_page.Value}" : null
+            }.Where(e => !string.IsNullOrEmpty(e));
+            var qp = queryparams.Count() > 0 ? $"?{string.Join("&", queryparams)}" : "";
+            var res = await client.GetAsync($"{server}/authors{qp}");
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<AuthorList>(content);
         }
-        public AuthorList getAuthors()
+        public AuthorList getAuthors(int? page = null, int? per_page = null)
         {
-            Task<AuthorList> t = getAuthorsAsync();
+            Task<AuthorList> t = getAuthorsAsync(page, per_page);
             return t.GetAwaiter().GetResult();
         }
         public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition obj)
@@ -252,19 +263,24 @@ namespace ServantClientBook
             Task<Publisher> t = getPublisherAsync(publisherId);
             return t.GetAwaiter().GetResult();
         }
-        public async Task<PublisherList> getPublishersAsync()
+        public async Task<PublisherList> getPublishersAsync(int? page=null, int? per_page=null)
         {
             var client = new ServantClient();
-            var res = await client.GetAsync($"{server}/publishers");
+            var queryparams = new List<string> {
+                page.HasValue ? $"page={page.Value}" : null,
+                per_page.HasValue ? $"per_page={per_page.Value}" : null
+            }.Where(e => !string.IsNullOrEmpty(e));
+            var qp = queryparams.Count() > 0 ? $"?{string.Join("&", queryparams)}" : "";
+            var res = await client.GetAsync($"{server}/publishers{qp}");
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<PublisherList>(content);
         }
-        public PublisherList getPublishers()
+        public PublisherList getPublishers(int? page=null, int? per_page=null)
         {
-            Task<PublisherList> t = getPublishersAsync();
+            Task<PublisherList> t = getPublishersAsync(page, per_page);
             return t.GetAwaiter().GetResult();
         }
         public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition obj)
@@ -377,19 +393,24 @@ namespace ServantClientBook
             Task<Book> t = getBookAsync(isbn);
             return t.GetAwaiter().GetResult();
         }
-        public async Task<BookList> getBooksAsync()
+        public async Task<BookList> getBooksAsync(int? page=null, int? per_page=null)
         {
             var client = new ServantClient();
-            var res = await client.GetAsync($"{server}/books");
+            var queryparams = new List<string> {
+                page.HasValue ? $"page={page.Value}" : null,
+                per_page.HasValue ? $"per_page={per_page.Value}" : null
+            }.Where(e => !string.IsNullOrEmpty(e));
+            var qp = queryparams.Count() > 0 ? $"?{string.Join("&", queryparams)}" : "";
+            var res = await client.GetAsync($"{server}/books{qp}");
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
             var content = await res.Content.ReadAsStringAsync();
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<BookList>(content);
         }
-        public BookList getBooks()
+        public BookList getBooks(int? page = null, int? per_page = null)
         {
-            Task<BookList> t = getBooksAsync();
+            Task<BookList> t = getBooksAsync(page, per_page);
             return t.GetAwaiter().GetResult();
         }
         public async Task<BookList> postBooksAsync(BookQueryCondition obj)

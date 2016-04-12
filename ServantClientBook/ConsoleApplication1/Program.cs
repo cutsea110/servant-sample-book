@@ -20,6 +20,9 @@ namespace ConsoleApplication1
                 #region Address Test
                 Address address = api.getAddress(1);
                 List<Address> addresses = api.getAddresses();
+                addresses = api.getAddresses(page: 10, per_page: 50);
+                addresses = api.getAddresses(page: 10);
+                addresses = api.getAddresses(per_page: 50);
                 Address address2 = new Address()
                 {
                     addressId = null,
@@ -41,7 +44,10 @@ namespace ConsoleApplication1
 
                 #region Author Test
                 Author author = api.getAuthor(1);
-                AuthorList authors = api.getAuthors();
+                AuthorList authors = api.getAuthors(page: 10, per_page: 50);
+                authors = api.getAuthors();
+                authors = api.getAuthors(page: 10);
+                authors = api.getAuthors(per_page: 50);
                 AuthorList authors2 = api.postAuthors(new AuthorQueryCondition()
                 {
                     genderEq=Gender.Female,
@@ -73,6 +79,9 @@ namespace ConsoleApplication1
                 #region Publisher Test
                 Publisher publissher = api.getPublisher(1);
                 PublisherList publishers = api.getPublishers();
+                publishers = api.getPublishers(page: 10, per_page: 50);
+                publishers = api.getPublishers(page: 10);
+                publishers = api.getPublishers(per_page: 50);
                 PublisherList publishers2 = api.postPublishers(new PublisherQueryCondition()
                 {
                     companyTypeIn = new List<CompanyType>()
@@ -104,6 +113,9 @@ namespace ConsoleApplication1
                 #region Book Test
                 Book book = api.getBook(1);
                 BookList books = api.getBooks();
+                books = api.getBooks(page: 10, per_page: 50);
+                books = api.getBooks(page: 10);
+                books = api.getBooks(per_page: 50);
                 BookList books2 = api.postBooks(new BookQueryCondition()
                 {
                     categoryIn = new List<Category>()
