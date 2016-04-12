@@ -70,7 +70,20 @@ instance Arbitrary Author where
       age = arbitrary `suchThat` ((&&) <$> (0<) <*> (<120))
 
 instance Arbitrary AuthorList where
-  arbitrary = AuthorList <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+  arbitrary = do
+      cp <- arbitrary `suchThat` (>0)  -- currentpage
+      p <- arbitrary `suchThat` (>=cp) -- total page
+      pp <- elements [10, 30, 50, 100] -- size per page
+      let lastp = cp == p              -- last?
+      lcnt <- arbitrary `suchThat` (\x -> 0<x && x<=pp)
+      res <- if lastp
+             then resize pp $ listOf1 arbitrary
+             else vectorOf pp arbitrary
+      let (cp', pp', lcnt') = (fromIntegral cp, fromIntegral pp, fromIntegral lcnt)
+          cnt = ((p-1) * pp' + if lastp then count res else lcnt')
+      return $ AuthorList cnt cp' pp res
+          where
+            count = fromIntegral . Prelude.length
 
 instance Arbitrary CompanyType where
   arbitrary = elements [minBound..maxBound]
@@ -79,7 +92,20 @@ instance Arbitrary Publisher where
   arbitrary = Publisher <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
 
 instance Arbitrary PublisherList where
-  arbitrary = PublisherList <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+  arbitrary = do
+      cp <- arbitrary `suchThat` (>0)  -- currentpage
+      p <- arbitrary `suchThat` (>=cp) -- total page
+      pp <- elements [10, 30, 50, 100] -- size per page
+      let lastp = cp == p              -- last?
+      lcnt <- arbitrary `suchThat` (\x -> 0<x && x<=pp)
+      res <- if lastp
+             then resize pp $ listOf1 arbitrary
+             else vectorOf pp arbitrary
+      let (cp', pp', lcnt') = (fromIntegral cp, fromIntegral pp, fromIntegral lcnt)
+          cnt = ((p-1) * pp' + if lastp then count res else lcnt')
+      return $ PublisherList cnt cp' pp res
+          where
+            count = fromIntegral . Prelude.length
 
 instance Arbitrary AddressId where
   arbitrary = AddressId <$> arbitrary `suchThat` (>0)
@@ -126,7 +152,20 @@ instance Arbitrary Book where
       authors = resize 3 $ listOf1 arbitrary
 
 instance Arbitrary BookList where
-  arbitrary = BookList <$> arbitrary <*> arbitrary <*> arbitrary <*> arbitrary
+  arbitrary = do
+      cp <- arbitrary `suchThat` (>0)  -- currentpage
+      p <- arbitrary `suchThat` (>=cp) -- total page
+      pp <- elements [10, 30, 50, 100] -- size per page
+      let lastp = cp == p              -- last?
+      lcnt <- arbitrary `suchThat` (\x -> 0<x && x<=pp)
+      res <- if lastp
+             then resize pp $ listOf1 arbitrary
+             else vectorOf pp arbitrary
+      let (cp', pp', lcnt') = (fromIntegral cp, fromIntegral pp, fromIntegral lcnt)
+          cnt = ((p-1) * pp' + if lastp then count res else lcnt')
+      return $ BookList cnt cp' pp res
+          where
+            count = fromIntegral . Prelude.length
 
 main :: IO ()
 main = run 8081 $ serve api (mock api Proxy)
