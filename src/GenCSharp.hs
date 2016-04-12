@@ -104,12 +104,20 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                  $ req ^. reqUrl . path
       rqBody = maybe [] (pure . (id &&& const (jsonRequestBodyName opt)))
                $ req ^. reqBody
-      queryparams = map ((view argType &&& unPathSegment . view argName)
+      queryparams = map ((convToNullable . view argType
+                         &&&
+                          unPathSegment . view argName)
                         . view queryArgName)
                     $ req ^. reqUrl . queryStr
 
       aStmts = "    aStmts\n"
       stmts = "    stmts\n"
+
+      -- TODO: more typable
+      convToNullable "int" = "int?"
+      convToNullable "string" = "string"
+      convToNullable "DateTime" = "DateTime?"
+      convToNullable t = "Nullable<" <> t <> ">"
 
 main :: IO ()
 main = mapM_ (T.putStr . generateMethod def) getEndpoints
