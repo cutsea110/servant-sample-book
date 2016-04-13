@@ -88,13 +88,14 @@ onToplevel :: Text -> Bool
 onToplevel line = "\n" == line ||
                   isPrefixOf "#if" line ||
                   isPrefixOf "#else" line ||
+                  isPrefixOf "#elif" line ||
                   isPrefixOf "#endif" line
 
 generateMethod :: CSharpOption -> Req Text -> Text
 generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
     where
       aDecl = "public async " <> retTaskTyp <> " " <> fnameAsync <> "(" <> argsDecl <> ")"
-      aBody = " {\n" <> concatWithIndent aStmts <> "}\n"
+      aBody = "\n{\n" <> concatWithIndent aStmts <> "}\n"
 
       concatWithIndent :: [Text] -> Text
       concatWithIndent = concat . map indent
@@ -104,7 +105,7 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                           else "    " <> line
 
       decl = "public " <> retTyp <> " " <> fname <> "(" <> argsDecl <> ")"
-      body = " {\n" <> concatWithIndent stmts <> "}\n"
+      body = "\n{\n" <> concatWithIndent stmts <> "}\n"
 
       retTaskTyp = case retTyp of
                      "void" -> "Task"

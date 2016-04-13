@@ -38,7 +38,8 @@ namespace ServantClientBook
         #endregion
         #region API for server
         
-        public async Task<List<Address>> getAddressesAsync(int? _page = null, int? _per_page = null) {
+        public async Task<List<Address>> getAddressesAsync(int? _page = null, int? _per_page = null)
+        {
             var client = new ServantClient();
             var queryparams = new List<string> {
                _page.HasValue ? $"_page={_page.Value}" : null,
@@ -51,12 +52,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<List<Address>>(content);
         }
-        public List<Address> getAddresses(int? _page = null, int? _per_page = null) {
+        public List<Address> getAddresses(int? _page = null, int? _per_page = null)
+        {
             Task<List<Address>> t = getAddressesAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<AddressId> postAddressAsync(Address _obj) {
+        public async Task<AddressId> postAddressAsync(Address _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -71,12 +74,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<AddressId>(content);
         }
-        public AddressId postAddress(Address _obj) {
+        public AddressId postAddress(Address _obj)
+        {
             Task<AddressId> t = postAddressAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<Address> getAddressByIdAsync(AddressId _id) {
+        public async Task<Address> getAddressByIdAsync(AddressId _id)
+        {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/address/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -84,12 +89,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Address>(content);
         }
-        public Address getAddressById(AddressId _id) {
+        public Address getAddressById(AddressId _id)
+        {
             Task<Address> t = getAddressByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task putAddressByIdAsync(AddressId _id, Address _obj) {
+        public async Task putAddressByIdAsync(AddressId _id, Address _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -104,12 +111,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void putAddressById(AddressId _id, Address _obj) {
+        public void putAddressById(AddressId _id, Address _obj)
+        {
             Task t = putAddressByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task deleteAddressByIdAsync(AddressId _id) {
+        public async Task deleteAddressByIdAsync(AddressId _id)
+        {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/address/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -117,12 +126,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void deleteAddressById(AddressId _id) {
+        public void deleteAddressById(AddressId _id)
+        {
             Task t = deleteAddressByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task<AuthorList> getAuthorsAsync(int? _page = null, int? _per_page = null) {
+        public async Task<AuthorList> getAuthorsAsync(int? _page = null, int? _per_page = null)
+        {
             var client = new ServantClient();
             var queryparams = new List<string> {
                _page.HasValue ? $"_page={_page.Value}" : null,
@@ -135,12 +146,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<AuthorList>(content);
         }
-        public AuthorList getAuthors(int? _page = null, int? _per_page = null) {
+        public AuthorList getAuthors(int? _page = null, int? _per_page = null)
+        {
             Task<AuthorList> t = getAuthorsAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null) {
+        public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
             var client = new ServantClient();
             var queryparams = new List<string> {
                _page.HasValue ? $"_page={_page.Value}" : null,
@@ -160,12 +173,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<AuthorList>(content);
         }
-        public AuthorList postAuthors(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null) {
+        public AuthorList postAuthors(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
             Task<AuthorList> t = postAuthorsAsync(_obj, _page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<AuthorId> postAuthorAsync(Author _obj) {
+        public async Task<AuthorId> postAuthorAsync(Author _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -180,12 +195,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<AuthorId>(content);
         }
-        public AuthorId postAuthor(Author _obj) {
+        public AuthorId postAuthor(Author _obj)
+        {
             Task<AuthorId> t = postAuthorAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<Author> getAuthorByIdAsync(AuthorId _id) {
+        public async Task<Author> getAuthorByIdAsync(AuthorId _id)
+        {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/author/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -193,12 +210,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Author>(content);
         }
-        public Author getAuthorById(AuthorId _id) {
+        public Author getAuthorById(AuthorId _id)
+        {
             Task<Author> t = getAuthorByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task putAuthorByIdAsync(AuthorId _id, Author _obj) {
+        public async Task putAuthorByIdAsync(AuthorId _id, Author _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -213,12 +232,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void putAuthorById(AuthorId _id, Author _obj) {
+        public void putAuthorById(AuthorId _id, Author _obj)
+        {
             Task t = putAuthorByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task deleteAuthorByIdAsync(AuthorId _id) {
+        public async Task deleteAuthorByIdAsync(AuthorId _id)
+        {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/author/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -226,12 +247,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void deleteAuthorById(AuthorId _id) {
+        public void deleteAuthorById(AuthorId _id)
+        {
             Task t = deleteAuthorByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task<PublisherList> getPublishersAsync(int? _page = null, int? _per_page = null) {
+        public async Task<PublisherList> getPublishersAsync(int? _page = null, int? _per_page = null)
+        {
             var client = new ServantClient();
             var queryparams = new List<string> {
                _page.HasValue ? $"_page={_page.Value}" : null,
@@ -244,12 +267,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<PublisherList>(content);
         }
-        public PublisherList getPublishers(int? _page = null, int? _per_page = null) {
+        public PublisherList getPublishers(int? _page = null, int? _per_page = null)
+        {
             Task<PublisherList> t = getPublishersAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null) {
+        public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
             var client = new ServantClient();
             var queryparams = new List<string> {
                _page.HasValue ? $"_page={_page.Value}" : null,
@@ -269,12 +294,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<PublisherList>(content);
         }
-        public PublisherList postPublishers(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null) {
+        public PublisherList postPublishers(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
             Task<PublisherList> t = postPublishersAsync(_obj, _page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<PublisherId> postPublisherAsync(Publisher _obj) {
+        public async Task<PublisherId> postPublisherAsync(Publisher _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -289,12 +316,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<PublisherId>(content);
         }
-        public PublisherId postPublisher(Publisher _obj) {
+        public PublisherId postPublisher(Publisher _obj)
+        {
             Task<PublisherId> t = postPublisherAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<Publisher> getPublisherByIdAsync(PublisherId _id) {
+        public async Task<Publisher> getPublisherByIdAsync(PublisherId _id)
+        {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/publisher/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -302,12 +331,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Publisher>(content);
         }
-        public Publisher getPublisherById(PublisherId _id) {
+        public Publisher getPublisherById(PublisherId _id)
+        {
             Task<Publisher> t = getPublisherByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task putPublisherByIdAsync(PublisherId _id, Publisher _obj) {
+        public async Task putPublisherByIdAsync(PublisherId _id, Publisher _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -322,12 +353,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void putPublisherById(PublisherId _id, Publisher _obj) {
+        public void putPublisherById(PublisherId _id, Publisher _obj)
+        {
             Task t = putPublisherByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task deletePublisherByIdAsync(PublisherId _id) {
+        public async Task deletePublisherByIdAsync(PublisherId _id)
+        {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/publisher/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -335,12 +368,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void deletePublisherById(PublisherId _id) {
+        public void deletePublisherById(PublisherId _id)
+        {
             Task t = deletePublisherByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task<BookList> getBooksAsync(int? _page = null, int? _per_page = null) {
+        public async Task<BookList> getBooksAsync(int? _page = null, int? _per_page = null)
+        {
             var client = new ServantClient();
             var queryparams = new List<string> {
                _page.HasValue ? $"_page={_page.Value}" : null,
@@ -353,12 +388,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<BookList>(content);
         }
-        public BookList getBooks(int? _page = null, int? _per_page = null) {
+        public BookList getBooks(int? _page = null, int? _per_page = null)
+        {
             Task<BookList> t = getBooksAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<BookList> postBooksAsync(BookQueryCondition _obj, int? _page = null, int? _per_page = null) {
+        public async Task<BookList> postBooksAsync(BookQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
             var client = new ServantClient();
             var queryparams = new List<string> {
                _page.HasValue ? $"_page={_page.Value}" : null,
@@ -378,12 +415,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<BookList>(content);
         }
-        public BookList postBooks(BookQueryCondition _obj, int? _page = null, int? _per_page = null) {
+        public BookList postBooks(BookQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
             Task<BookList> t = postBooksAsync(_obj, _page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<BookId> postBookAsync(Book _obj) {
+        public async Task<BookId> postBookAsync(Book _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -398,12 +437,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<BookId>(content);
         }
-        public BookId postBook(Book _obj) {
+        public BookId postBook(Book _obj)
+        {
             Task<BookId> t = postBookAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task<Book> getBookByIdAsync(BookId _id) {
+        public async Task<Book> getBookByIdAsync(BookId _id)
+        {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/book/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -411,12 +452,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Book>(content);
         }
-        public Book getBookById(BookId _id) {
+        public Book getBookById(BookId _id)
+        {
             Task<Book> t = getBookByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task putBookByIdAsync(BookId _id, Book _obj) {
+        public async Task putBookByIdAsync(BookId _id, Book _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -431,12 +474,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void putBookById(BookId _id, Book _obj) {
+        public void putBookById(BookId _id, Book _obj)
+        {
             Task t = putBookByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task deleteBookByIdAsync(BookId _id) {
+        public async Task deleteBookByIdAsync(BookId _id)
+        {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/book/{_id}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -444,12 +489,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void deleteBookById(BookId _id) {
+        public void deleteBookById(BookId _id)
+        {
             Task t = deleteBookByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task<Book> getBookIsbnByIsbnAsync(ISBN _isbn) {
+        public async Task<Book> getBookIsbnByIsbnAsync(ISBN _isbn)
+        {
             var client = new ServantClient();
             var res = await client.GetAsync($"{server}/book/isbn/{_isbn}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -457,12 +504,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             return JsonConvert.DeserializeObject<Book>(content);
         }
-        public Book getBookIsbnByIsbn(ISBN _isbn) {
+        public Book getBookIsbnByIsbn(ISBN _isbn)
+        {
             Task<Book> t = getBookIsbnByIsbnAsync(_isbn);
             return t.GetAwaiter().GetResult();
         }
         
-        public async Task putBookIsbnByIsbnAsync(ISBN _isbn, Book _obj) {
+        public async Task putBookIsbnByIsbnAsync(ISBN _isbn, Book _obj)
+        {
             var client = new ServantClient();
 #if DEBUG
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
@@ -477,12 +526,14 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void putBookIsbnByIsbn(ISBN _isbn, Book _obj) {
+        public void putBookIsbnByIsbn(ISBN _isbn, Book _obj)
+        {
             Task t = putBookIsbnByIsbnAsync(_isbn, _obj);
             t.GetAwaiter().GetResult();
         }
         
-        public async Task deleteBookIsbnByIsbnAsync(ISBN _isbn) {
+        public async Task deleteBookIsbnByIsbnAsync(ISBN _isbn)
+        {
             var client = new ServantClient();
             var res = await client.DeleteAsync($"{server}/book/isbn/{_isbn}");
             Debug.WriteLine($">>> {res.RequestMessage}");
@@ -490,7 +541,8 @@ namespace ServantClientBook
             Debug.WriteLine($"<<< {content}");
             JsonConvert.DeserializeObject(content);
         }
-        public void deleteBookIsbnByIsbn(ISBN _isbn) {
+        public void deleteBookIsbnByIsbn(ISBN _isbn)
+        {
             Task t = deleteBookIsbnByIsbnAsync(_isbn);
             t.GetAwaiter().GetResult();
         }
