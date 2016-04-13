@@ -150,12 +150,14 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                           ]
       -- TODO: care about ArgType
       mkQPStrs = map (<>",\n") $ map mkQPStr queryparams
-      mkQPStr ((_, n), _) = "   " <> n <> ".HasValue ? $\"" <> n <> "={" <> n <> ".Value}\" : null"
+      mkQPStr ((_, nm), _) = "   " <> _nm <> ".HasValue ? $\"" <> _nm <> "={" <> _nm <> ".Value}\" : null"
+          where
+            _nm = prefix opt <> nm
       mkJsonBody = if null rqBody then []
                    else [ "#if DEBUG\n"
-                        , "var jsobObj = JsonConvert.SerializeObject(" <> objSym <> ", Formatting.Indented);\n"
+                        , "var jsonObj = JsonConvert.SerializeObject(" <> objSym <> ", Formatting.Indented);\n"
                         , "#else\n"
-                        , "var jsobObj = JsonConvert.SerializeObject(" <> objSym <> ");\n"
+                        , "var jsonObj = JsonConvert.SerializeObject(" <> objSym <> ");\n"
                         , "#endif\n"
                         ]
       doAsync = [ "var res = await client." <> asyncMethod <> "(" <> asyncParams <> ");\n"
@@ -193,7 +195,11 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                     ["Debug.WriteLine($\"<<< {(int)res.StatusCode} {res.ReasonPhrase}\");\n"]
       readContent = ["var content = await res.Content.ReadAsStringAsync();\n"]
       printContent = ["Debug.WriteLine($\"<<< {content}\");\n"]
-      returnJson = ["return JsonConvert.DeserializeObject<" <> retTyp <> ">(conteny);\n"]
+      returnJson = [rtn <> "JsonConvert.DeserializeObject" <> typ <> "(content);\n"]
+          where
+            (rtn, typ) = case retTyp of
+                           "void" -> ("", "")
+                           _      -> ("return ", "<" <> retTyp <> ">")
 
       stmts = [ retTaskTyp <> " t = " <> fnameAsync <> "(" <> argNames <> ");\n"
               , "return t.GetAwaiter().GetResult();\n"]
