@@ -38,7 +38,7 @@ namespace ServantClientBook
         #endregion
         #region API for server
 
-        public async Task<List<Address>> getAddressesAsync(int? _page = null, int? _per_page = null)
+        public async Task<AddressList> getAddressesAsync(int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
             var queryparams = new List<string> {
@@ -50,11 +50,38 @@ namespace ServantClientBook
             Debug.WriteLine($">>> {res.RequestMessage}");
             var content = await res.Content.ReadAsStringAsync();
             Debug.WriteLine($"<<< {content}");
-            return JsonConvert.DeserializeObject<List<Address>>(content);
+            return JsonConvert.DeserializeObject<AddressList>(content);
         }
-        public List<Address> getAddresses(int? _page = null, int? _per_page = null)
+        public AddressList getAddresses(int? _page = null, int? _per_page = null)
         {
-            Task<List<Address>> t = getAddressesAsync(_page = null, _per_page = null);
+            Task<AddressList> t = getAddressesAsync(_page = null, _per_page = null);
+            return t.GetAwaiter().GetResult();
+        }
+
+        public async Task<AddressList> postAddressesAsync(AddressQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
+            var client = new ServantClient();
+            var queryparams = new List<string> {
+               _page.HasValue ? $"_page={_page.Value}" : null,
+               _per_page.HasValue ? $"_per_page={_per_page.Value}" : null,
+            }.Where(e => !string.IsNullOrEmpty(e));
+            var qp = queryparams.Count() > 0 ? $"?{string.Join("&", queryparams)}" : "";
+#if DEBUG
+            var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
+#else
+            var jsonObj = JsonConvert.SerializeObject(_obj);
+#endif
+            var res = await client.PostAsync($"{server}/addresses{qp}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
+            Debug.WriteLine($">>> {res.RequestMessage}");
+            Debug.WriteLine($"-----\n{jsonObj}\n-----");
+            Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
+            var content = await res.Content.ReadAsStringAsync();
+            Debug.WriteLine($"<<< {content}");
+            return JsonConvert.DeserializeObject<AddressList>(content);
+        }
+        public AddressList postAddresses(AddressQueryCondition _obj, int? _page = null, int? _per_page = null)
+        {
+            Task<AddressList> t = postAddressesAsync(_obj, _page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
 
