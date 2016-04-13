@@ -18,11 +18,11 @@ namespace ConsoleApplication1
                 var api = new API("http://192.168.91.130:8081");
 
                 #region Address Test
-                Address address = api.getAddress(1);
+                Address address = api.getAddressById(1);
                 List<Address> addresses = api.getAddresses();
-                addresses = api.getAddresses(page: 10, per_page: 50);
-                addresses = api.getAddresses(page: 10);
-                addresses = api.getAddresses(per_page: 50);
+                addresses = api.getAddresses(_page: 10, _per_page: 50);
+                addresses = api.getAddresses(_page: 10);
+                addresses = api.getAddresses(_per_page: 50);
                 Address address2 = new Address()
                 {
                     addressId = null,
@@ -38,16 +38,16 @@ namespace ConsoleApplication1
                 };
                 address2.addressId = api.postAddress(address2);
                 address2.email = "cut-sea@timedia.co.jp";
-                api.putAddress(address2.addressId.Value, address2);
-                api.deleteAddress(address2.addressId.Value);
+                api.putAddressById(address2.addressId.Value, address2);
+                api.deleteAddressById(address2.addressId.Value);
                 #endregion
 
                 #region Author Test
-                Author author = api.getAuthor(1);
-                AuthorList authors = api.getAuthors(page: 10, per_page: 50);
+                Author author = api.getAuthorById(1);
+                AuthorList authors = api.getAuthors(_page: 10, _per_page: 50);
                 authors = api.getAuthors();
-                authors = api.getAuthors(page: 10);
-                authors = api.getAuthors(per_page: 50);
+                authors = api.getAuthors(_page: 10);
+                authors = api.getAuthors(_per_page: 50);
                 AuthorList authors2 = api.postAuthors(new AuthorQueryCondition()
                 {
                     genderEq=Gender.Female,
@@ -72,16 +72,16 @@ namespace ConsoleApplication1
                 author2.name = "伊東 奈緒";
                 author2.birth = new DateTime(2012, 11, 2);
                 author2.age = 3;
-                api.putAuthor(author2.authorId.Value, author2);
-                api.deleteAuthor(author2.authorId.Value);
+                api.putAuthorById(author2.authorId.Value, author2);
+                api.deleteAuthorById(author2.authorId.Value);
                 #endregion
 
                 #region Publisher Test
-                Publisher publissher = api.getPublisher(1);
+                Publisher publissher = api.getPublisherById(1);
                 PublisherList publishers = api.getPublishers();
-                publishers = api.getPublishers(page: 10, per_page: 50);
-                publishers = api.getPublishers(page: 10);
-                publishers = api.getPublishers(per_page: 50);
+                publishers = api.getPublishers(_page: 10, _per_page: 50);
+                publishers = api.getPublishers(_page: 10);
+                publishers = api.getPublishers(_per_page: 50);
                 PublisherList publishers2 = api.postPublishers(new PublisherQueryCondition()
                 {
                     companyTypeIn = new List<CompanyType>()
@@ -106,16 +106,16 @@ namespace ConsoleApplication1
                 publisher2.name = "オライリー";
                 publisher2.companyType = CompanyType.INC;
                 publisher2.address = address;
-                api.putPublisher(publisher2.publisherId.Value, publisher2);
-                api.deletePublisher(publisher2.publisherId.Value);
+                api.putPublisherById(publisher2.publisherId.Value, publisher2);
+                api.deletePublisherById(publisher2.publisherId.Value);
                 #endregion
 
                 #region Book Test
-                Book book = api.getBook(1);
+                Book book = api.getBookById(1);
                 BookList books = api.getBooks();
-                books = api.getBooks(page: 10, per_page: 50);
-                books = api.getBooks(page: 10);
-                books = api.getBooks(per_page: 50);
+                books = api.getBooks(_page: 10, _per_page: 50);
+                books = api.getBooks(_page: 10);
+                books = api.getBooks(_per_page: 50);
                 BookList books2 = api.postBooks(new BookQueryCondition()
                 {
                     categoryIn = new List<Category>()
@@ -156,12 +156,12 @@ namespace ConsoleApplication1
                 };
                 book2.bookId = api.postBook(book2);
                 book2.title = book2.title + " Ver.2";
-                api.putBook(book2.bookId.Value, book2);
-                api.deleteBook(book2.bookId.Value);
+                api.putBookById(book2.bookId.Value, book2);
+                api.deleteBookById(book2.bookId.Value);
 
-                book = api.getBook("ISBN123-4567-8901-123");
-                api.putBook(book2.isbn, book2);
-                api.deleteBook(book2.isbn);
+                book = api.getBookIsbnByIsbn("ISBN123-4567-8901-123");
+                api.putBookIsbnByIsbn(book2.isbn, book2);
+                api.deleteBookIsbnByIsbn(book2.isbn);
 
                 #endregion
 

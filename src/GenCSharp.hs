@@ -6,19 +6,21 @@
 {-# LANGUAGE TypeSynonymInstances #-}
 module GenCSharp where
 
-import Prelude hiding (concat)
+import Prelude hiding (concat, lines, unlines)
 import Control.Arrow
 import Control.Lens
 import Data.ByteString (ByteString)
 import Data.Maybe (fromJust)
 import Data.Monoid ((<>))
-import Data.Text as T (Text, pack, intercalate, toLower, concat)
+import Data.Text as T (Text, pack, intercalate, toLower, concat, lines, unlines, isPrefixOf)
 import qualified Data.Text.IO as T
 import Data.Time (UTCTime)
 import Data.Time.Calendar (Day)
 import Data.Typeable
 import Data.Proxy
 import Network.HTTP.Types (Method(..))
+import System.Directory (createDirectoryIfMissing)
+
 import Servant.Foreign
 
 import Types
@@ -74,23 +76,37 @@ getEndpoints = listFromAPI (Proxy :: Proxy CSharp) (Proxy :: Proxy Text) api
 
 data CSharpOption = CSharpOption { prefix :: Text
                                  , jsonRequestBodyName ::Text
+                                 , namespace :: Text
                                  } deriving Show
 def :: CSharpOption
 def = CSharpOption { prefix = "_"
                    , jsonRequestBodyName = "obj"
+                   , namespace = "ServantClientAPI"
                    }
+
+onToplevel :: Text -> Bool
+onToplevel line = "\n" == line ||
+                  "" == line || -- care for after `lines`
+                  isPrefixOf "#if" line ||
+                  isPrefixOf "#else" line ||
+                  isPrefixOf "#elif" line ||
+                  isPrefixOf "#endif" line
 
 generateMethod :: CSharpOption -> Req Text -> Text
 generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
     where
-      aDecl = "public async " <> retTaskTyp <> " " <> fnameAsync <> "(" <> argsDecl <> ")"
-      aBody = " {\n" <> concatWithIndent aStmts <> "}\n"
+      aDecl = "public async " <> retTaskTyp <> " " <> fnameAsync <> "(" <> argsDecl <> ")\n"
+      aBody = "{\n" <> concatWithIndent aStmts <> "}\n"
 
       concatWithIndent :: [Text] -> Text
-      concatWithIndent = concat . map ("    " <>)
+      concatWithIndent = concat . map indent
+          where
+            indent line = if onToplevel line
+                          then line
+                          else "    " <> line
 
-      decl = "public " <> retTyp <> " " <> fname <> "(" <> argsDecl <> ")"
-      body = " {\n" <> concatWithIndent stmts <> "}\n"
+      decl = "public " <> retTyp <> " " <> fname <> "(" <> argsDecl <> ")\n"
+      body = "{\n" <> concatWithIndent stmts <> "}\n"
 
       retTaskTyp = case retTyp of
                      "void" -> "Task"
@@ -136,15 +152,17 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                           ]
       -- TODO: care about ArgType
       mkQPStrs = map (<>",\n") $ map mkQPStr queryparams
-      mkQPStr ((_, n), _) = "   " <> n <> ".HasValue ? $\"" <> n <> "={" <> n <> ".Value}\" : null"
+      mkQPStr ((_, nm), _) = "   " <> _nm <> ".HasValue ? $\"" <> _nm <> "={" <> _nm <> ".Value}\" : null"
+          where
+            _nm = prefix opt <> nm
       mkJsonBody = if null rqBody then []
                    else [ "#if DEBUG\n"
-                        , "var jsobObj = JsonConvert.SerializeObject(" <> objSym <> ", Formatting.Indented);\n"
+                        , "var jsonObj = JsonConvert.SerializeObject(" <> objSym <> ", Formatting.Indented);\n"
                         , "#else\n"
-                        , "var jsobObj = JsonConvert.SerializeObject(" <> objSym <> ");\n"
+                        , "var jsonObj = JsonConvert.SerializeObject(" <> objSym <> ");\n"
                         , "#endif\n"
                         ]
-      doAsync = [ "var res = await client." <> asyncMethod <> "(" <> asyncParams <> ");"
+      doAsync = [ "var res = await client." <> asyncMethod <> "(" <> asyncParams <> ");\n"
                 ]
       objSym = prefix opt <> jsonRequestBodyName opt
       asyncMethod = case req^.reqMethod of
@@ -171,13 +189,26 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                 = "/{"<> prefix opt <> s^.argName._PathSegment <> "}" <> ss
       strContent = if null rqBody then []
                    else ["new StringContent(jsonObj, Encoding.UTF8, \"application/json\")"]
-      printReqRes = []
-      readContent = []
-      printContent = []
-      returnJson = []
+      printReqRes = ["Debug.WriteLine($\">>> {res.RequestMessage}\");\n"]
+                    ++
+                    if null rqBody then []
+                    else ["Debug.WriteLine($\"-----\\n{jsonObj}\\n-----\");\n"]
+                    ++
+                    ["Debug.WriteLine($\"<<< {(int)res.StatusCode} {res.ReasonPhrase}\");\n"]
+      readContent = ["var content = await res.Content.ReadAsStringAsync();\n"]
+      printContent = ["Debug.WriteLine($\"<<< {content}\");\n"]
+      returnJson = [rtn <> "JsonConvert.DeserializeObject" <> typ <> "(content);\n"]
+          where
+            (rtn, typ) = case retTyp of
+                           "void" -> ("", "")
+                           _      -> ("return ", "<" <> retTyp <> ">")
 
       stmts = [ retTaskTyp <> " t = " <> fnameAsync <> "(" <> argNames <> ");\n"
-              , "return t.GetAwaiter().GetResult();\n"]
+              , rtn <> "t.GetAwaiter().GetResult();\n"]
+          where
+            rtn = case retTyp of
+                    "void" -> ""
+                    _ -> "return "
       argNames = intercalate ", " $ map snd argsTyp_Nm
 
       -- TODO: more typable
@@ -186,5 +217,75 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
       convToNullable "DateTime" = "DateTime?"
       convToNullable t = "Nullable<" <> t <> ">"
 
+
+usingBlock :: [Text]
+usingBlock = [ "using Newtonsoft.Json;\n"
+             , "using System.Collections.Generic;\n"
+             , "using System.Diagnostics;\n"
+             , "using System.Linq;\n"
+             , "using System.Net.Http;\n"
+             , "using System.Net.Http.Headers;\n"
+             , "using System.Text;\n"
+             , "using System.Threading.Tasks;\n"
+             , "\n"
+             , "#region type alias\n"
+             , "using AddressId = System.Int64;\n"
+             , "using AuthorId = System.Int64;\n"
+             , "using PublisherId = System.Int64;\n"
+             , "using BookId = System.Int64;\n"
+             , "using ISBN = System.String;\n"
+             , "using Postcode = System.String;\n"
+             , "using Tel = System.String;\n"
+             , "using Fax = System.String;\n"
+             , "using Emailaddress = System.String;\n"
+             , "#endregion\n"
+             , "\n"
+             ]
+
+classHead :: CSharpOption -> [Text]
+classHead opt = [ "namespace " <> namespace opt <> "\n"
+                , "{\n"
+                , "    class ServantClient : HttpClient\n"
+                , "    {\n"
+                , "        public ServantClient()\n"
+                , "        {\n"
+                , "            this.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue(\"application/json\"));\n"
+                , "        }\n"
+                , "    }\n"
+                , "    public class API\n"
+                , "    {\n"
+                , "        #region Constructor\n"
+                , "        private string server;\n"
+                , "        public API(string _server)\n"
+                , "        {\n"
+                , "            this.server = _server;"
+                , "        }\n"
+                , "        #endregion\n"
+                , "        #region API for server\n"
+                ]
+
+classTail :: [Text]
+classTail     = [ "        #endregion\n"
+                , "    }\n"
+                , "}\n"
+                ]
+
 main :: IO ()
-main = mapM_ (T.putStr . generateMethod def) getEndpoints
+main = do
+  createDirectoryIfMissing True "gen/ServantClientBook/ServantClientBook"
+  T.writeFile "gen/ServantClientBook/ServantClientBook/API.cs" code
+    where
+      code :: Text
+      code = concat fragments
+      def' = def { namespace = "ServantClientBook" }
+      fragments :: [Text]
+      fragments = usingBlock ++
+                  classHead def' ++
+                  map indent generated ++
+                  classTail
+      generated :: [Text]
+      generated = concatMap (lines . generateMethod def') getEndpoints
+      indent :: Text -> Text
+      indent line = if onToplevel line
+                    then line <> "\n"
+                    else "        " <> line <> "\n"
