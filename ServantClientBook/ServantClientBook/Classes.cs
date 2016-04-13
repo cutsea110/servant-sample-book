@@ -43,6 +43,30 @@ namespace ServantClientBook
         [JsonProperty(PropertyName = "updatedAt")]
         public DateTime updatedAt { get; set; }
     }
+    [JsonObject("AddressQueryCondition")]
+    public class AddressQueryCondition
+    {
+        [JsonProperty(PropertyName = "postCodeLike")]
+        public string postCodeLike { get; set; }
+        [JsonProperty(PropertyName = "telLike")]
+        public string telLike { get; set; }
+        [JsonProperty(PropertyName = "faxLike")]
+        public string faxLike { get; set; }
+        [JsonProperty(PropertyName = "emailLike")]
+        public string emailLike { get; set; }
+    }
+    [JsonObject("AddressList")]
+    public class AddressList
+    {
+        [JsonProperty(PropertyName = "hits")]
+        public int hits { get; set; }
+        [JsonProperty(PropertyName = "page")]
+        public int page { get; set; }
+        [JsonProperty(PropertyName = "per_page")]
+        public int per_page { get; set; }
+        [JsonProperty(PropertyName = "result")]
+        public List<Address> result { get; set; }
+    }
     #endregion
     #region Author
     [JsonObject("Author")]
