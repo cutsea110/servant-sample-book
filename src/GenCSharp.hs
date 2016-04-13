@@ -86,6 +86,7 @@ def = CSharpOption { prefix = "_"
 
 onToplevel :: Text -> Bool
 onToplevel line = "\n" == line ||
+                  "" == line || -- care for after `lines`
                   isPrefixOf "#if" line ||
                   isPrefixOf "#else" line ||
                   isPrefixOf "#elif" line ||
@@ -104,8 +105,8 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                           then line
                           else "    " <> line
 
-      decl = "public " <> retTyp <> " " <> fname <> "(" <> argsDecl <> ")"
-      body = "\n{\n" <> concatWithIndent stmts <> "}\n"
+      decl = "public " <> retTyp <> " " <> fname <> "(" <> argsDecl <> ")\n"
+      body = "{\n" <> concatWithIndent stmts <> "}\n"
 
       retTaskTyp = case retTyp of
                      "void" -> "Task"

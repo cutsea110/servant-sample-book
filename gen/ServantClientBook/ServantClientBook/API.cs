@@ -37,7 +37,7 @@ namespace ServantClientBook
             this.server = _server;        }
         #endregion
         #region API for server
-        
+
         public async Task<List<Address>> getAddressesAsync(int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
@@ -57,7 +57,7 @@ namespace ServantClientBook
             Task<List<Address>> t = getAddressesAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<AddressId> postAddressAsync(Address _obj)
         {
             var client = new ServantClient();
@@ -79,7 +79,7 @@ namespace ServantClientBook
             Task<AddressId> t = postAddressAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<Address> getAddressByIdAsync(AddressId _id)
         {
             var client = new ServantClient();
@@ -94,7 +94,7 @@ namespace ServantClientBook
             Task<Address> t = getAddressByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task putAddressByIdAsync(AddressId _id, Address _obj)
         {
             var client = new ServantClient();
@@ -116,7 +116,7 @@ namespace ServantClientBook
             Task t = putAddressByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task deleteAddressByIdAsync(AddressId _id)
         {
             var client = new ServantClient();
@@ -131,7 +131,7 @@ namespace ServantClientBook
             Task t = deleteAddressByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<AuthorList> getAuthorsAsync(int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
@@ -151,7 +151,7 @@ namespace ServantClientBook
             Task<AuthorList> t = getAuthorsAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
@@ -178,7 +178,7 @@ namespace ServantClientBook
             Task<AuthorList> t = postAuthorsAsync(_obj, _page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<AuthorId> postAuthorAsync(Author _obj)
         {
             var client = new ServantClient();
@@ -200,7 +200,7 @@ namespace ServantClientBook
             Task<AuthorId> t = postAuthorAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<Author> getAuthorByIdAsync(AuthorId _id)
         {
             var client = new ServantClient();
@@ -215,7 +215,7 @@ namespace ServantClientBook
             Task<Author> t = getAuthorByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task putAuthorByIdAsync(AuthorId _id, Author _obj)
         {
             var client = new ServantClient();
@@ -237,7 +237,7 @@ namespace ServantClientBook
             Task t = putAuthorByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task deleteAuthorByIdAsync(AuthorId _id)
         {
             var client = new ServantClient();
@@ -252,7 +252,7 @@ namespace ServantClientBook
             Task t = deleteAuthorByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<PublisherList> getPublishersAsync(int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
@@ -272,7 +272,7 @@ namespace ServantClientBook
             Task<PublisherList> t = getPublishersAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
@@ -299,7 +299,7 @@ namespace ServantClientBook
             Task<PublisherList> t = postPublishersAsync(_obj, _page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<PublisherId> postPublisherAsync(Publisher _obj)
         {
             var client = new ServantClient();
@@ -321,7 +321,7 @@ namespace ServantClientBook
             Task<PublisherId> t = postPublisherAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<Publisher> getPublisherByIdAsync(PublisherId _id)
         {
             var client = new ServantClient();
@@ -336,7 +336,7 @@ namespace ServantClientBook
             Task<Publisher> t = getPublisherByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task putPublisherByIdAsync(PublisherId _id, Publisher _obj)
         {
             var client = new ServantClient();
@@ -358,7 +358,7 @@ namespace ServantClientBook
             Task t = putPublisherByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task deletePublisherByIdAsync(PublisherId _id)
         {
             var client = new ServantClient();
@@ -373,7 +373,7 @@ namespace ServantClientBook
             Task t = deletePublisherByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<BookList> getBooksAsync(int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
@@ -393,7 +393,7 @@ namespace ServantClientBook
             Task<BookList> t = getBooksAsync(_page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<BookList> postBooksAsync(BookQueryCondition _obj, int? _page = null, int? _per_page = null)
         {
             var client = new ServantClient();
@@ -420,7 +420,7 @@ namespace ServantClientBook
             Task<BookList> t = postBooksAsync(_obj, _page = null, _per_page = null);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<BookId> postBookAsync(Book _obj)
         {
             var client = new ServantClient();
@@ -442,7 +442,7 @@ namespace ServantClientBook
             Task<BookId> t = postBookAsync(_obj);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<Book> getBookByIdAsync(BookId _id)
         {
             var client = new ServantClient();
@@ -457,7 +457,7 @@ namespace ServantClientBook
             Task<Book> t = getBookByIdAsync(_id);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task putBookByIdAsync(BookId _id, Book _obj)
         {
             var client = new ServantClient();
@@ -479,7 +479,7 @@ namespace ServantClientBook
             Task t = putBookByIdAsync(_id, _obj);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task deleteBookByIdAsync(BookId _id)
         {
             var client = new ServantClient();
@@ -494,7 +494,7 @@ namespace ServantClientBook
             Task t = deleteBookByIdAsync(_id);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task<Book> getBookIsbnByIsbnAsync(ISBN _isbn)
         {
             var client = new ServantClient();
@@ -509,7 +509,7 @@ namespace ServantClientBook
             Task<Book> t = getBookIsbnByIsbnAsync(_isbn);
             return t.GetAwaiter().GetResult();
         }
-        
+
         public async Task putBookIsbnByIsbnAsync(ISBN _isbn, Book _obj)
         {
             var client = new ServantClient();
@@ -531,7 +531,7 @@ namespace ServantClientBook
             Task t = putBookIsbnByIsbnAsync(_isbn, _obj);
             t.GetAwaiter().GetResult();
         }
-        
+
         public async Task deleteBookIsbnByIsbnAsync(ISBN _isbn)
         {
             var client = new ServantClient();
