@@ -87,8 +87,8 @@ def = CSharpOption { prefix = "_"
 onToplevel :: Text -> Bool
 onToplevel line = "\n" == line ||
                   isPrefixOf "#if" line ||
-                  isPrefixOf "#elseif" line ||
-                  isPrefixOf "#else" line
+                  isPrefixOf "#else" line ||
+                  isPrefixOf "#endif" line
 
 generateMethod :: CSharpOption -> Req Text -> Text
 generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
@@ -186,7 +186,7 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
             segToText (Segment (Cap s)) ss
                 = "/{"<> prefix opt <> s^.argName._PathSegment <> "}" <> ss
       strContent = if null rqBody then []
-                   else ["new StringContent(jsonObj, Encoding.UTF8, \"application/json\"));\n"]
+                   else ["new StringContent(jsonObj, Encoding.UTF8, \"application/json\")"]
       printReqRes = ["Debug.WriteLine($\">>> {res.RequestMessage}\");\n"]
                     ++
                     if null rqBody then []

@@ -62,9 +62,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PostAsync($"{server}/address", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -96,9 +95,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PutAsync($"{server}/address/{_id}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -153,9 +151,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PostAsync($"{server}/authors{qp}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -174,9 +171,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PostAsync($"{server}/author", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -208,9 +204,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PutAsync($"{server}/author/{_id}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -265,9 +260,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PostAsync($"{server}/publishers{qp}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -286,9 +280,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PostAsync($"{server}/publisher", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -320,9 +313,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PutAsync($"{server}/publisher/{_id}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -377,9 +369,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PostAsync($"{server}/books{qp}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -398,9 +389,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PostAsync($"{server}/book", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -432,9 +422,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PutAsync($"{server}/book/{_id}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
@@ -479,9 +468,8 @@ namespace ServantClientBook
             var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
 #else
             var jsonObj = JsonConvert.SerializeObject(_obj);
-            #endif
+#endif
             var res = await client.PutAsync($"{server}/book/isbn/{_isbn}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
-        );
             Debug.WriteLine($">>> {res.RequestMessage}");
             Debug.WriteLine($"-----\n{jsonObj}\n-----");
             Debug.WriteLine($"<<< {(int)res.StatusCode} {res.ReasonPhrase}");
