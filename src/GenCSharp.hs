@@ -94,8 +94,8 @@ onToplevel line = "\n" == line ||
 generateMethod :: CSharpOption -> Req Text -> Text
 generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
     where
-      aDecl = "public async " <> retTaskTyp <> " " <> fnameAsync <> "(" <> argsDecl <> ")"
-      aBody = "\n{\n" <> concatWithIndent aStmts <> "}\n"
+      aDecl = "public async " <> retTaskTyp <> " " <> fnameAsync <> "(" <> argsDecl <> ")\n"
+      aBody = "{\n" <> concatWithIndent aStmts <> "}\n"
 
       concatWithIndent :: [Text] -> Text
       concatWithIndent = concat . map indent
