@@ -19,10 +19,15 @@ namespace ConsoleApplication1
 
                 #region Address Test
                 Address address = api.getAddressById(1);
-                List<Address> addresses = api.getAddresses();
+                AddressList addresses = api.getAddresses();
                 addresses = api.getAddresses(_page: 10, _per_page: 50);
                 addresses = api.getAddresses(_page: 10);
                 addresses = api.getAddresses(_per_page: 50);
+                AddressList addresses2 = api.postAddresses(new AddressQueryCondition()
+                {
+                    postCodeLike = "134-%",
+                    faxLike = "0%"
+                });
                 Address address2 = new Address()
                 {
                     addressId = null,
