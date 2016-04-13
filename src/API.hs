@@ -25,7 +25,10 @@ import Book
 type Handler a = ExceptT ServantErr IO a
                
 type AddressAPI =
-       "addresses" :> QueryParam "page" Int :> QueryParam "per_page" Int :> Get '[JSON] [Address]
+       "addresses" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       (    Get '[JSON] AddressList
+       :<|> ReqBody '[JSON] AddressQueryCondition  :> Post '[JSON] AddressList
+       )
   :<|> "address" :> ReqBody '[JSON] Address :> Post '[JSON] AddressId
   :<|> "address" :> Capture "id" AddressId :>
        (    Get '[JSON] Address
@@ -33,7 +36,10 @@ type AddressAPI =
        :<|> Delete '[JSON] ()
        )
 
-addressServer :: (Maybe Int -> Maybe Int -> Handler [Address])
+addressServer :: (Maybe Int -> Maybe Int ->
+                      Handler AddressList
+                 :<|> (AddressQueryCondition -> Handler AddressList)
+                 )
             :<|> (Address -> Handler AddressId)
             :<|> (AddressId ->
                        Handler Address
@@ -42,8 +48,12 @@ addressServer :: (Maybe Int -> Maybe Int -> Handler [Address])
                  )
 addressServer = list :<|> new :<|> opes
   where
-    list :: Maybe Int -> Maybe Int -> Handler [Address]
-    list = undefined
+    list :: Maybe Int -> Maybe Int -> Handler AddressList :<|> (AddressQueryCondition -> Handler AddressList)
+    list page per_page = get page per_page :<|> finder page per_page
+    get :: Maybe Int -> Maybe Int -> Handler AddressList
+    get = undefined
+    finder :: Maybe Int -> Maybe Int -> AddressQueryCondition -> Handler AddressList
+    finder = undefined
     new :: Address -> Handler AddressId
     new = undefined
     opes :: AddressId -> Handler Address :<|> (Address -> Handler ()) :<|> Handler ()

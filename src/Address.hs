@@ -3,6 +3,9 @@
 module Address
        ( AddressId(..)
        , Address(..)
+
+       , AddressQueryCondition(..)
+       , AddressList(..)
        ) where
 
 import Data.Aeson
@@ -35,3 +38,16 @@ data Address = Address { addressId :: Maybe AddressId
                        , createdAt :: UTCTime
                        , updatedAt :: UTCTime
                        } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
+
+data AddressQueryCondition
+    = AddressQueryCondition { postCodeLike :: Maybe Text
+                            , telLike :: Maybe Text
+                            , faxLike :: Maybe Text
+                            , emailLike :: Maybe Text
+                            } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
+
+data AddressList = AddressList { hits :: Integer
+                               , page :: Int
+                               , per_page :: Int
+                               , result :: [Address]
+                               } deriving (Show, FromJSON, ToJSON, Generic, Typeable)

@@ -1,3 +1,4 @@
+{-# LANGUAGE DataKinds #-}
 {-# LANGUAGE OverloadedStrings #-}
 module Docs where
 
@@ -94,6 +95,18 @@ instance ToSample Address where
     where
       d1 = fromJust $ toSample undefined
       d2 = fromJust $ toSample undefined
+
+instance ToSample AddressQueryCondition where
+    toSamples _ = [("search query", q)]
+        where
+          q = AddressQueryCondition (Just "134-%") Nothing (Just "090%") Nothing
+
+instance ToSample AddressList where
+    toSamples _ = [("search result", r)]
+        where
+          r = AddressList 2 0 50 [a1, a2]
+          a1 = fromJust $ toSample undefined
+          a2 = fromJust $ toSample undefined
 
 instance ToSample Book where
   toSamples c = [("book", Book (Just (BookId 1)) "Haskell book" (ISBN "isbn") Computer "for Haskeller" p [a1, a2] d d1 d1)]
