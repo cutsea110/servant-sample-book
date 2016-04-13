@@ -186,7 +186,7 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
             segToText (Segment (Cap s)) ss
                 = "/{"<> prefix opt <> s^.argName._PathSegment <> "}" <> ss
       strContent = if null rqBody then []
-                   else ["new StringContent(jsonObj, Encoding.UTF8, \"application/json\");\n"]
+                   else ["new StringContent(jsonObj, Encoding.UTF8, \"application/json\"));\n"]
       printReqRes = ["Debug.WriteLine($\">>> {res.RequestMessage}\");\n"]
                     ++
                     if null rqBody then []
