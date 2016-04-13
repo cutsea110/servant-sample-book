@@ -1,11 +1,11 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq
+using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text
-using System.Threading.Tasks
+using System.Text;
+using System.Threading.Tasks;
 
 #region type alias
 using AddressId = System.Int64;
@@ -108,7 +108,7 @@ namespace ServantClientBook
         }
         public void putAddressById(AddressId _id, Address _obj) {
             Task t = putAddressByIdAsync(_id, _obj);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task deleteAddressByIdAsync(AddressId _id) {
@@ -121,7 +121,7 @@ namespace ServantClientBook
         }
         public void deleteAddressById(AddressId _id) {
             Task t = deleteAddressByIdAsync(_id);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task<AuthorList> getAuthorsAsync(int? _page = null, int? _per_page = null) {
@@ -220,7 +220,7 @@ namespace ServantClientBook
         }
         public void putAuthorById(AuthorId _id, Author _obj) {
             Task t = putAuthorByIdAsync(_id, _obj);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task deleteAuthorByIdAsync(AuthorId _id) {
@@ -233,7 +233,7 @@ namespace ServantClientBook
         }
         public void deleteAuthorById(AuthorId _id) {
             Task t = deleteAuthorByIdAsync(_id);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task<PublisherList> getPublishersAsync(int? _page = null, int? _per_page = null) {
@@ -332,7 +332,7 @@ namespace ServantClientBook
         }
         public void putPublisherById(PublisherId _id, Publisher _obj) {
             Task t = putPublisherByIdAsync(_id, _obj);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task deletePublisherByIdAsync(PublisherId _id) {
@@ -345,7 +345,7 @@ namespace ServantClientBook
         }
         public void deletePublisherById(PublisherId _id) {
             Task t = deletePublisherByIdAsync(_id);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task<BookList> getBooksAsync(int? _page = null, int? _per_page = null) {
@@ -444,7 +444,7 @@ namespace ServantClientBook
         }
         public void putBookById(BookId _id, Book _obj) {
             Task t = putBookByIdAsync(_id, _obj);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task deleteBookByIdAsync(BookId _id) {
@@ -457,7 +457,7 @@ namespace ServantClientBook
         }
         public void deleteBookById(BookId _id) {
             Task t = deleteBookByIdAsync(_id);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task<Book> getBookIsbnByIsbnAsync(ISBN _isbn) {
@@ -491,7 +491,7 @@ namespace ServantClientBook
         }
         public void putBookIsbnByIsbn(ISBN _isbn, Book _obj) {
             Task t = putBookIsbnByIsbnAsync(_isbn, _obj);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         
         public async Task deleteBookIsbnByIsbnAsync(ISBN _isbn) {
@@ -504,7 +504,7 @@ namespace ServantClientBook
         }
         public void deleteBookIsbnByIsbn(ISBN _isbn) {
             Task t = deleteBookIsbnByIsbnAsync(_isbn);
-            return t.GetAwaiter().GetResult();
+            t.GetAwaiter().GetResult();
         }
         #endregion
     }

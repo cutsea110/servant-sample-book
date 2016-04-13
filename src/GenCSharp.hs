@@ -202,7 +202,11 @@ generateMethod opt req = "\n" <> aDecl <> aBody <> decl <> body
                            _      -> ("return ", "<" <> retTyp <> ">")
 
       stmts = [ retTaskTyp <> " t = " <> fnameAsync <> "(" <> argNames <> ");\n"
-              , "return t.GetAwaiter().GetResult();\n"]
+              , rtn <> "t.GetAwaiter().GetResult();\n"]
+          where
+            rtn = case retTyp of
+                    "void" -> ""
+                    _ -> "return "
       argNames = intercalate ", " $ map snd argsTyp_Nm
 
       -- TODO: more typable
@@ -216,11 +220,11 @@ usingBlock :: [Text]
 usingBlock = [ "using Newtonsoft.Json;\n"
              , "using System.Collections.Generic;\n"
              , "using System.Diagnostics;\n"
-             , "using System.Linq\n"
+             , "using System.Linq;\n"
              , "using System.Net.Http;\n"
              , "using System.Net.Http.Headers;\n"
-             , "using System.Text\n"
-             , "using System.Threading.Tasks\n"
+             , "using System.Text;\n"
+             , "using System.Threading.Tasks;\n"
              , "\n"
              , "#region type alias\n"
              , "using AddressId = System.Int64;\n"
