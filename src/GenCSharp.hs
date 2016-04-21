@@ -211,11 +211,11 @@ namespace ${namespace}
                     _${qp}.HasValue ? $"_${qp}={_${qp}.Value}" : null,
               }.Where(e => !string.IsNullOrEmpty(e));
               var qp= queryparams.Count() > 0 ? $"?{string.Join("&", queryparams)}" : "";
-                #if DEBUG
-                var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
-                #else
-                var jsonObj = JsonConvert.SerializeObject(_obj);
-                #endif
+              #if DEBUG
+              var jsonObj = JsonConvert.SerializeObject(_obj, Formatting.Indented);
+              #else
+              var jsonObj = JsonConvert.SerializeObject(_obj);
+              #endif
               $if requestBodyExists ep
                 var res = await client.${methodType ep}Async($"{server}${uri ep}{qp}", new StringContent(jsonObj, Encoding.UTF8, "application/json"));
               $else
