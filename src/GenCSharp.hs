@@ -138,16 +138,18 @@ paramInfos :: Bool -> Req Text -> [(String, String)]
 paramInfos b req = foldr (<>) mempty
                    $ map ($ req) [ captures
                                  , rqBody
-                                 , map (help b) . queryparams
+                                 , queryparams'
                                  ]
     where
-      help True  = convToNullable *** (<>" = null")
-      help False = convToNullable *** id
-      -- TODO : more typeable
-      convToNullable "int" = "int?"
-      convToNullable "string" = "string"
-      convToNullable "DateTime" = "DateTime?"
-      convToNullable t = "Nullable<"<>t<>">"
+      queryparams' = map (help b) . queryparams
+          where
+            help True  = convToNullable *** (<>" = null")
+            help False = convToNullable *** id
+            -- TODO : more typeable
+            convToNullable "int" = "int?"
+            convToNullable "string" = "string"
+            convToNullable "DateTime" = "DateTime?"
+            convToNullable t = "Nullable<"<>t<>">"
 
 queryparams :: Req Text -> [(String, String)]
 queryparams req = map ((T.unpack . view argType
