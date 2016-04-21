@@ -11,6 +11,8 @@ import Prelude hiding (concat, lines, unlines)
 import Control.Arrow
 import Control.Lens
 import Data.ByteString (ByteString)
+import Data.ByteString.Char8 as BC (unpack)
+import Data.Char (toUpper, toLower)
 import Data.List (intercalate)
 import Data.Maybe (fromJust)
 import Data.Monoid ((<>))
@@ -97,11 +99,6 @@ types = [ ("AddressId",    "System.Int64")
 retType :: Req Text -> String
 retType req = T.unpack $ fromJust $ req^.reqReturnType
 
-retTypeTask :: Req Text -> String
-retTypeTask req = case retType req of
-                    "void" -> "Task"
-                    t -> "Task<"++ t ++">"
-
 uri :: Req Text -> String
 uri req = T.unpack $ segmentsToText $ req^..reqUrl.path.traverse
     where
@@ -115,11 +112,10 @@ uri req = T.unpack $ segmentsToText $ req^..reqUrl.path.traverse
       prefix = "_"
 
 methodType :: Req Text -> String
-methodType req = case req^.reqMethod of
-                   "GET" -> "Get"
-                   "POST" -> "Post"
-                   "PUT" -> "Put"
-                   "DELETE" -> "Delete"
+methodType req = capitalize $ BC.unpack $ req^.reqMethod
+    where
+      capitalize :: String -> String
+      capitalize (c:cs) = toUpper c:map toLower cs
 
 methodName :: Req Text -> String
 methodName req = T.unpack $ req^.reqFuncName.camelCaseL
@@ -128,13 +124,15 @@ paramDecl :: Req Text -> String
 paramDecl req = intercalate ", " $ map help $ paramInfos req
     where
       help :: (String, String) -> String
-      help (t, n) = t ++ " " ++ ("_"++n)
+      help (t, n) = t ++ " " ++ (prefix++n)
+      prefix = "_"
 
 paramArg :: Req Text -> String
 paramArg req = intercalate ", " $ map help $ paramInfos req
     where
       help :: (String, String) -> String
-      help (_, n) = "_"++n
+      help (_, n) = prefix++n
+      prefix = "_"
 
 paramInfos :: Req Text -> [(String, String)]
 paramInfos req = captures req ++ rqBody req ++ map help (queryparams req)
@@ -211,7 +209,10 @@ namespace ${namespace}
 
         #region APIs
         $forall ep <- getEndpoints
-          public async ${retTypeTask ep} ${methodName ep}Async(${paramDecl ep})
+          $if retType ep /= "void"
+            public async Task<${retType ep}> ${methodName ep}Async(${paramDecl ep})
+          $else
+            public async Task ${methodName ep}Async(${paramDecl ep})
           {
               var client = new ServantClient();
               var queryparams = new List<string> {
@@ -244,10 +245,11 @@ namespace ${namespace}
          }
           public ${retType ep} ${methodName ep}(${paramDecl ep})
           {
-              ${retTypeTask ep} t = ${methodName ep}Async(${paramArg ep});
               $if retType ep /= "void"
+                Task<${retType ep}> t = ${methodName ep}Async(${paramArg ep});
                 return t.GetAwaiter().GetResult();
               $else
+                Task t = ${methodName ep}Async(${paramArg ep});
                 t.GetAwaiter().GetResult();
           }
         #endregion
