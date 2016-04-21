@@ -9,15 +9,15 @@ using System.Text;
 using System.Threading.Tasks;
 
 #region type alias
-using AddressId = System.Int64;
-using AuthorId = System.Int64;
-using PublisherId = System.Int64;
-using BookId = System.Int64;
-using ISBN = System.String;
 using Postcode = System.String;
 using Tel = System.String;
 using Fax = System.String;
 using Emailaddress = System.String;
+using ISBN = System.String;
+using AddressId = System.Int64;
+using AuthorId = System.Int64;
+using PublisherId = System.Int64;
+using BookId = System.Int64;
 #endregion
 
 namespace ServantClientBook

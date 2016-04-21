@@ -30,6 +30,7 @@ executable book-server
                      , base >=4.8 && <4.9
                      , bytestring >= 0.10.6.0
                      , directory >= 1.2.2.0
+                     , haskell-src-exts >= 1.17
                      , heredocs >= 0.1
                      , http-types >= 0.9
                      , lens >=4.13 && <4.14
