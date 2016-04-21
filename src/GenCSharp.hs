@@ -97,7 +97,7 @@ types = [ ("AddressId",    "System.Int64")
         ]
 
 retType :: Req Text -> String
-retType req = T.unpack $ fromJust $ req^.reqReturnType
+retType = T.unpack . fromJust . view reqReturnType
 
 uri :: Req Text -> String
 uri req = T.unpack $ segmentsToText $ req^..reqUrl.path.traverse
@@ -112,37 +112,41 @@ uri req = T.unpack $ segmentsToText $ req^..reqUrl.path.traverse
       prefix = "_"
 
 methodType :: Req Text -> String
-methodType req = capitalize $ BC.unpack $ req^.reqMethod
+methodType = capitalize . BC.unpack . view reqMethod
     where
       capitalize :: String -> String
       capitalize (c:cs) = toUpper c:map toLower cs
 
 methodName :: Req Text -> String
-methodName req = T.unpack $ req^.reqFuncName.camelCaseL
+methodName  = T.unpack . view (reqFuncName.camelCaseL)
 
 paramDecl :: Req Text -> String
-paramDecl req = intercalate ", " $ map help $ paramInfos req
+paramDecl = intercalate ", " . map help . paramInfos
     where
       help :: (String, String) -> String
-      help (t, n) = t ++ " " ++ (prefix++n)
+      help (t, n) = t<>" "<>(prefix<>n)
       prefix = "_"
 
 paramArg :: Req Text -> String
-paramArg req = intercalate ", " $ map help $ paramInfos req
+paramArg = intercalate ", " . map help . paramInfos
     where
       help :: (String, String) -> String
-      help (_, n) = prefix++n
+      help (_, n) = prefix<>n
       prefix = "_"
 
 paramInfos :: Req Text -> [(String, String)]
-paramInfos req = captures req ++ rqBody req ++ map help (queryparams req)
+paramInfos req = foldr (<>) mempty
+                   $ map ($ req) [ captures
+                                 , rqBody
+                                 , map help . queryparams
+                                 ]
     where
-      help = convToNullable *** (++" = null")
+      help = convToNullable *** (<>" = null")
       -- TODO : more typeable
       convToNullable "int" = "int?"
       convToNullable "string" = "string"
       convToNullable "DateTime" = "DateTime?"
-      convToNullable t = "Nullable<"++t++">"
+      convToNullable t = "Nullable<"<>t<>">"
 
 queryparams :: Req Text -> [(String, String)]
 queryparams req = map ((T.unpack . view argType
@@ -158,7 +162,8 @@ captures req = map ((T.unpack . view argType &&& T.unpack . view argPath)
                $ req^.reqUrl.path
 
 rqBody :: Req Text -> [(String, String)]
-rqBody req = maybe [] (pure . (T.unpack &&& const jsonReqBodyName)) $ req^.reqBody
+rqBody req = maybe [] (pure . (T.unpack &&& const jsonReqBodyName))
+             $ req^.reqBody
     where
       jsonReqBodyName = "obj"
 
