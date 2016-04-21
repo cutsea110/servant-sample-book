@@ -121,27 +121,28 @@ methodName :: Req Text -> String
 methodName  = T.unpack . view (reqFuncName.camelCaseL)
 
 paramDecl :: Req Text -> String
-paramDecl = intercalate ", " . map help . paramInfos
+paramDecl = intercalate ", " . map help . paramInfos True
     where
       help :: (String, String) -> String
       help (t, n) = t<>" "<>(prefix<>n)
       prefix = "_"
 
 paramArg :: Req Text -> String
-paramArg = intercalate ", " . map help . paramInfos
+paramArg = intercalate ", " . map help . paramInfos False
     where
       help :: (String, String) -> String
       help (_, n) = prefix<>n
       prefix = "_"
 
-paramInfos :: Req Text -> [(String, String)]
-paramInfos req = foldr (<>) mempty
+paramInfos :: Bool -> Req Text -> [(String, String)]
+paramInfos b req = foldr (<>) mempty
                    $ map ($ req) [ captures
                                  , rqBody
-                                 , map help . queryparams
+                                 , map (help b) . queryparams
                                  ]
     where
-      help = convToNullable *** (<>" = null")
+      help True  = convToNullable *** (<>" = null")
+      help False = convToNullable *** id
       -- TODO : more typeable
       convToNullable "int" = "int?"
       convToNullable "string" = "string"
