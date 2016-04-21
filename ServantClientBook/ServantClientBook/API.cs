@@ -64,7 +64,7 @@ namespace ServantClientBook
         }
          public AddressList getAddresses(int? _page = null, int? _per_page = null)
          {
-             Task<AddressList> t = getAddressesAsync(_page = null, _per_page = null);
+             Task<AddressList> t = getAddressesAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<AddressList> postAddressesAsync(AddressQueryCondition _obj, int? _page = null, int? _per_page = null)
@@ -92,7 +92,7 @@ namespace ServantClientBook
         }
          public AddressList postAddresses(AddressQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
-             Task<AddressList> t = postAddressesAsync(_obj, _page = null, _per_page = null);
+             Task<AddressList> t = postAddressesAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<AddressId> postAddressAsync(Address _obj)
@@ -200,7 +200,7 @@ namespace ServantClientBook
         }
          public AuthorList getAuthors(int? _page = null, int? _per_page = null)
          {
-             Task<AuthorList> t = getAuthorsAsync(_page = null, _per_page = null);
+             Task<AuthorList> t = getAuthorsAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null)
@@ -228,7 +228,7 @@ namespace ServantClientBook
         }
          public AuthorList postAuthors(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
-             Task<AuthorList> t = postAuthorsAsync(_obj, _page = null, _per_page = null);
+             Task<AuthorList> t = postAuthorsAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<AuthorId> postAuthorAsync(Author _obj)
@@ -336,7 +336,7 @@ namespace ServantClientBook
         }
          public PublisherList getPublishers(int? _page = null, int? _per_page = null)
          {
-             Task<PublisherList> t = getPublishersAsync(_page = null, _per_page = null);
+             Task<PublisherList> t = getPublishersAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null)
@@ -364,7 +364,7 @@ namespace ServantClientBook
         }
          public PublisherList postPublishers(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
-             Task<PublisherList> t = postPublishersAsync(_obj, _page = null, _per_page = null);
+             Task<PublisherList> t = postPublishersAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<PublisherId> postPublisherAsync(Publisher _obj)
@@ -472,7 +472,7 @@ namespace ServantClientBook
         }
          public BookList getBooks(int? _page = null, int? _per_page = null)
          {
-             Task<BookList> t = getBooksAsync(_page = null, _per_page = null);
+             Task<BookList> t = getBooksAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<BookList> postBooksAsync(BookQueryCondition _obj, int? _page = null, int? _per_page = null)
@@ -500,7 +500,7 @@ namespace ServantClientBook
         }
          public BookList postBooks(BookQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
-             Task<BookList> t = postBooksAsync(_obj, _page = null, _per_page = null);
+             Task<BookList> t = postBooksAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
          }
          public async Task<BookId> postBookAsync(Book _obj)
