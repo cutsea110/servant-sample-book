@@ -13,6 +13,10 @@ import API (api)
 
 import CS.JsonDotNet
 
+
+import Language.Haskell.Exts
+
+
 def' :: GenerateCsConfig
 def' = def { namespace = "ServantClientBook"
            , sources = [ "src/Types.hs"
@@ -27,5 +31,7 @@ main :: IO ()
 main = do
   let genDir = "gen/ServantClientBook/ServantClientBook"
   createDirectoryIfMissing True genDir
-  content <- csForAPIWith def' api
-  writeFile (genDir++"/API.cs") content
+  apiCs <- apiCsForAPIWith def' api
+  writeFile (genDir++"/API.cs") apiCs
+  enumCs <- enumCsForAPIWith def'
+  writeFile (genDir++"/Enum.cs") enumCs
