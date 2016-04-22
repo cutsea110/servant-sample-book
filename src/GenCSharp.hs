@@ -8,27 +8,7 @@
 {-# LANGUAGE QuasiQuotes #-}
 module GenCSharp where
 
-import Prelude hiding (concat, lines, unlines)
-import Control.Arrow
-import Control.Lens
-import Data.ByteString (ByteString)
-import Data.ByteString.Char8 as BC (unpack)
-import Data.Char (toUpper, toLower)
-import Data.List (intercalate, concat)
-import Data.Maybe (fromJust)
-import Data.Monoid ((<>))
-import Data.Text as T (Text, unpack, pack)
-import qualified Data.Text.IO as T
-import Data.Time (UTCTime)
-import Data.Time.Calendar (Day)
-import Data.Typeable
-import Data.Proxy
-import Language.Haskell.Exts
-import Network.HTTP.Types (Method(..))
 import System.Directory (createDirectoryIfMissing)
-import Text.Heredoc
-
-import Servant.Foreign
 
 import Types
 import Address
