@@ -277,7 +277,8 @@ namespace ${namespace}
           }
         #endregion
     }
-}|]
+}
+|]
 
 main :: IO ()
 main = do
