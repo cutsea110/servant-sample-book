@@ -22,8 +22,6 @@ import Author
 import Publisher
 import Book
 
-type Handler a = ExceptT ServantErr IO a
-               
 type AddressAPI =
        "addresses" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
        (    Get '[JSON] AddressList
