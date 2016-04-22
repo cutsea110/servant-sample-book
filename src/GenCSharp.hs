@@ -25,6 +25,7 @@ def' = def { namespace = "ServantClientBook"
 
 main :: IO ()
 main = do
-  createDirectoryIfMissing True "gen/ServantClientBook/ServantClientBook"
+  let genDir = "gen/ServantClientBook/ServantClientBook"
+  createDirectoryIfMissing True genDir
   content <- csForAPIWith def' api
-  writeFile "gen/ServantClientBook/ServantClientBook/API.cs" content
+  writeFile (genDir++"/API.cs") content
