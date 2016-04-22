@@ -111,19 +111,6 @@ usingAliasesFromFile hs = do
     where
       toTuple (DataDecl _ NewType _ (Ident name) _ [qcon] _)
               = (name, origType qcon)
-{--
-types :: [(String, String)]
-types = [ ("AddressId",    "System.Int64")
-        , ("AuthorId",     "System.Int64")
-        , ("PublisherId",  "System.Int64")
-        , ("BookId",       "System.Int64")
-        , ("ISBN",         "System.String")
-        , ("Postcode",     "System.String")
-        , ("Tel",          "System.String")
-        , ("Fax",          "System.String")
-        , ("Emailaddress", "System.String")
-        ]
---}
 retType :: Req Text -> String
 retType = T.unpack . fromJust . view reqReturnType
 
