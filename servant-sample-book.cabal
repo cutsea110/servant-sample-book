@@ -37,7 +37,7 @@ executable book-server
                      , quickcheck-instances >= 0.3.12
                      , scientific >= 0.3.4.6
                      , servant >=0.6
-                     , servant-csharp >=0.0.5
+                     , servant-csharp >=0.0.6
                      , servant-docs >=0.6
                      , servant-foreign >= 0.6.1
                      , servant-js >= 0.6
