@@ -35,3 +35,5 @@ main = do
   writeFile (genDir++"/API.cs") apiCs
   enumCs <- enumCsForAPIWith def'
   writeFile (genDir++"/Enum.cs") enumCs
+  convCs <- converterCsForAPIWith def'
+  writeFile (genDir++"/JsonConverter.cs") convCs
