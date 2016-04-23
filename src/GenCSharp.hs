@@ -23,6 +23,8 @@ def' = def { namespace = "ServantClientBook"
                        , "src/Address.hs"
                        , "src/Author.hs"
                        , "src/Publisher.hs"
+                       , "src/AuthorInfo.hs"
+                       , "src/PublisherInfo.hs"
                        , "src/Book.hs"
                        ]
             }
@@ -31,6 +33,8 @@ main :: IO ()
 main = do
   let genDir = "gen/ServantClientBook/ServantClientBook"
   createDirectoryIfMissing True genDir
+  classCs <- classCsForAPIWith def'
+  writeFile (genDir++"/Classes.cs") classCs
   apiCs <- apiCsForAPIWith def' api
   writeFile (genDir++"/API.cs") apiCs
   enumCs <- enumCsForAPIWith def'

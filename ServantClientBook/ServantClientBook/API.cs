@@ -17,6 +17,8 @@ using ISBN = System.String;
 using AddressId = System.Int64;
 using AuthorId = System.Int64;
 using PublisherId = System.Int64;
+using AuthorName = System.String;
+using PublisherName = System.String;
 using BookId = System.Int64;
 #endregion
 
