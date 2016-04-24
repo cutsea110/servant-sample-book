@@ -14,6 +14,7 @@ import Data.Text (Text, unpack)
 import Data.Time (UTCTime)
 import Data.Time.Calendar
 import Data.Typeable
+import Data.Word
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
 
@@ -21,13 +22,13 @@ import Types
 import AuthorInfo
 import PublisherInfo
 
-newtype BookId = BookId { getBookId :: Integer } deriving (Show, Generic, Typeable)
+newtype BookId = BookId { getBookId :: Word64 } deriving (Show, Generic, Typeable)
 
 instance FromJSON BookId where
-  parseJSON (Number v) = BookId <$> pure (coefficient v)
+  parseJSON (Number v) = BookId <$> pure (fromInteger $ coefficient v)
   parseJSON _ = mempty
 instance ToJSON BookId where
-  toJSON = Number . flip scientific 0 . getBookId
+  toJSON = Number . flip scientific 0 . toInteger . getBookId
 instance FromHttpApiData BookId where
   parseQueryParam = Right . BookId . read . unpack
 
@@ -54,8 +55,8 @@ data BookQueryCondition
                        , publishedTo :: Maybe Day
                        } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
 
-data BookList = BookList { hits :: Integer
-                         , page :: Int
-                         , per_page :: Int
+data BookList = BookList { hits :: Word64
+                         , page :: Word64
+                         , per_page :: Word16
                          , result :: [Book]
                          } deriving (Show, FromJSON, ToJSON, Generic, Typeable)

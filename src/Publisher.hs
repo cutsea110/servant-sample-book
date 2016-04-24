@@ -13,19 +13,20 @@ import Data.Scientific (scientific, coefficient)
 import Data.Text (Text, unpack)
 import Data.Time (UTCTime)
 import Data.Typeable
+import Data.Word
 import GHC.Generics
 import Servant.API (FromHttpApiData(..))
 
 import Types
 import Address
 
-newtype PublisherId = PublisherId { getPublisherId :: Integer } deriving (Show, Generic, Typeable)
+newtype PublisherId = PublisherId { getPublisherId :: Word64 } deriving (Show, Generic, Typeable)
 
 instance FromJSON PublisherId where
-  parseJSON (Number v) = PublisherId <$> pure (coefficient v)
+  parseJSON (Number v) = PublisherId <$> pure (fromInteger $ coefficient v)
   parseJSON _ = mempty
 instance ToJSON PublisherId where
-  toJSON = Number . flip scientific 0 . getPublisherId
+  toJSON = Number . flip scientific 0 . toInteger . getPublisherId
 instance FromHttpApiData PublisherId where
   parseQueryParam = Right . PublisherId . read . unpack
 
@@ -43,8 +44,8 @@ data PublisherQueryCondition
                             , prefectureIn :: Maybe [Prefecture]
                             } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
 
-data PublisherList = PublisherList { hits :: Integer
-                                   , page :: Int
-                                   , per_page :: Int
+data PublisherList = PublisherList { hits :: Word64
+                                   , page :: Word64
+                                   , per_page :: Word16
                                    , result :: [Publisher]
                                    } deriving (Show, FromJSON, ToJSON, Generic, Typeable)
