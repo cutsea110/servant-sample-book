@@ -30,14 +30,4 @@ def' = def { namespace = "ServantClientBook"
             }
 
 main :: IO ()
-main = do
-  let genDir = "gen/ServantClientBook/ServantClientBook"
-  createDirectoryIfMissing True genDir
-  classCs <- classCsForAPIWith def'
-  writeFile (genDir++"/Classes.cs") classCs
-  apiCs <- apiCsForAPIWith def' api
-  writeFile (genDir++"/API.cs") apiCs
-  enumCs <- enumCsForAPIWith def'
-  writeFile (genDir++"/Enum.cs") enumCs
-  convCs <- converterCsForAPIWith def'
-  writeFile (genDir++"/JsonConverter.cs") convCs
+main = genCsForAPI def' api
