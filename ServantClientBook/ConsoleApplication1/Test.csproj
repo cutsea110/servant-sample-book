@@ -50,8 +50,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ServantClientBook\ServantClientBook.csproj">
-      <Project>{bddd11cc-1ee6-4467-b5c5-cda6c566d7ca}</Project>
+    <ProjectReference Include="..\..\gen\ServantClientBook\ServantClientBook.csproj">
+      <Project>{82b84d6e-d0b6-4a5f-934e-77be5127639a}</Project>
       <Name>ServantClientBook</Name>
     </ProjectReference>
   </ItemGroup>
