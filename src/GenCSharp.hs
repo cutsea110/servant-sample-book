@@ -36,29 +36,33 @@ data FieldType = FInteger
                | FRef Text
                  deriving Show
 
-convert' :: (Text, Referenced Schema) -> FieldType
-convert' (name, Inline s) = convert (name, s)
-convert' (name, Ref (Reference s)) = FRef s
+convert' :: [Text] -> (Text, Referenced Schema) -> FieldType
+convert' reqs (name, ref) | name `elem` reqs = conv (name, ref)
+                          | otherwise = FNullable $ conv (name, ref)
+    where
+      conv (name, Inline s) = (convert (name, s))
+      conv (name, Ref (Reference s)) = FRef s
 
 convert :: (Text, Schema) -> FieldType
 convert (name, s)
-    = if null enums
-      then case s^.type_ of
+    = if not $ null enums
+      then FEnum name enums
+      else case s^.type_ of
              SwaggerString -> maybe FString convByFormat $ s^.format
              SwaggerInteger -> FInteger
              SwaggerNumber -> FNumber
              SwaggerBoolean -> FBool
              SwaggerArray -> FList itemType
              SwaggerNull -> error "convert don't support yet SwaggerNull"
-             SwaggerObject -> FGeneral name $ map (id.fst &&& convert') props
-      else FEnum name enums
+             SwaggerObject -> FGeneral name $ map (id.fst &&& convert' reqs) props
     where
+      reqs = s^.required
       enums = s^.paramSchema.enum_._Just
       convByFormat "date" = FDay
       convByFormat "yyyy-mm-ddThh:MM:ssZ" = FUTCTime
       props = M.toList $ s^.properties
       itemType = maybe (error "couldn't convert!") convByItems $ s^.items
-      convByItems (SwaggerItemsObject r) = convert' (name, r)
+      convByItems (SwaggerItemsObject r) = convert' reqs (name, r)
       convByItems (SwaggerItemsPrimitive _ _)
           = error "convert don't support yet for SwaggerArray with SwaggerItemsPrimitive"
       convByItems (SwaggerItemsArray _)
