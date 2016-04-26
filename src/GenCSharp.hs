@@ -33,7 +33,10 @@ data FieldType = FInteger
                | FObject Text [(Text, FieldType)]
                | FList FieldType
                | FNullable FieldType
-               | FRef Text
+
+               | FRefObject Text
+               | FRefEnum Text
+               | FRefPrim Text FieldType
                  deriving Show
 
 convProperty :: ParamName -> Referenced Schema -> Bool -> FieldType
@@ -42,8 +45,17 @@ convProperty pname rs req = if req
                             else FNullable $ convProp rs
     where
       convProp :: Referenced Schema -> FieldType
-      convProp (Ref (Reference s)) = FRef s
+      convProp (Ref (Reference s)) = convRef s
       convProp (Inline s) = convert (pname, s)
+
+convRef :: ParamName -> FieldType
+convRef pname
+    = maybe notEnum (const $ FRefEnum pname) $ lookup pname enums
+    where
+      notEnum = maybe notPrim (FRefPrim pname) $ lookup pname prims
+      notPrim = maybe (error "not found the reference") (const $ FRefObject pname) $ lookup pname models
+
+        
 
 convObject :: (Text, Schema) -> FieldType
 convObject (name, s) = FObject name fields
@@ -78,7 +90,7 @@ convert (name, s)
       convByItems :: SwaggerItems Schema -> FieldType
       convByItems (SwaggerItemsPrimitive _ _)
           = error "don't support SwaggerItemsPrimitive"
-      convByItems (SwaggerItemsObject (Ref (Reference s))) = FRef s
+      convByItems (SwaggerItemsObject (Ref (Reference s))) = convRef s
       convByItems (SwaggerItemsArray _)
           = error "don't support SwaggerItemsArray"
 -- map (fst &&& convert) defs
@@ -96,6 +108,8 @@ prims = filter (isPrim . snd) $ map (fst &&& convert) defs
       isPrim FInteger = True
       isPrim FNumber = True
       isPrim FBool = True
+      isPrim FDay = True
+      isPrim FUTCTime = True
       isPrim _ = False
 
 models :: [(Text, FieldType)]
