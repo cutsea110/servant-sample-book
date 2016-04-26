@@ -30,16 +30,15 @@ data FieldType = FInteger
                | FDay
                | FUTCTime
                | FEnum Text [Value]
-               | FGeneral Text [(Text, Referenced Schema)]
+               | FGeneral Text [(Text, FieldType)]
                | FList FieldType
                | FNullable FieldType
+               | FRef Text
                  deriving Show
 
 convert' :: (Text, Referenced Schema) -> FieldType
 convert' (name, Inline s) = convert (name, s)
-convert' (name, Ref (Reference s))
-    = let Just f = lookup s $ enums ++ prims ++ models
-      in f
+convert' (name, Ref (Reference s)) = FRef s
 
 convert :: (Text, Schema) -> FieldType
 convert (name, s)
@@ -49,15 +48,21 @@ convert (name, s)
              SwaggerInteger -> FInteger
              SwaggerNumber -> FNumber
              SwaggerBoolean -> FBool
-             SwaggerArray -> error "convert don't support yet SwaggerArray"
+             SwaggerArray -> FList itemType
              SwaggerNull -> error "convert don't support yet SwaggerNull"
-             SwaggerObject -> FGeneral name props
+             SwaggerObject -> FGeneral name $ map (id.fst &&& convert') props
       else FEnum name enums
     where
       enums = s^.paramSchema.enum_._Just
       convByFormat "date" = FDay
       convByFormat "yyyy-mm-ddThh:MM:ssZ" = FUTCTime
       props = M.toList $ s^.properties
+      itemType = maybe (error "couldn't convert!") convByItems $ s^.items
+      convByItems (SwaggerItemsObject r) = convert' (name, r)
+      convByItems (SwaggerItemsPrimitive _ _)
+          = error "convert don't support yet for SwaggerArray with SwaggerItemsPrimitive"
+      convByItems (SwaggerItemsArray _)
+          = error "convert don't support yet for SwaggerArray with SwaggerItemsArray"
 
 -- map (id.fst &&& convert) defs
 
