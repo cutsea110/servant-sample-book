@@ -30,10 +30,16 @@ data FieldType = FInteger
                | FDay
                | FUTCTime
                | FEnum Text [Value]
-               | FGeneral Text
+               | FGeneral Text [(Text, Referenced Schema)]
                | FList FieldType
                | FNullable FieldType
                  deriving Show
+
+convert' :: (Text, Referenced Schema) -> FieldType
+convert' (name, Inline s) = convert (name, s)
+convert' (name, Ref (Reference s))
+    = let Just f = lookup s $ enums ++ prims ++ models
+      in f
 
 convert :: (Text, Schema) -> FieldType
 convert (name, s)
@@ -45,12 +51,14 @@ convert (name, s)
              SwaggerBoolean -> FBool
              SwaggerArray -> error "convert don't support yet SwaggerArray"
              SwaggerNull -> error "convert don't support yet SwaggerNull"
-             SwaggerObject -> FGeneral name
+             SwaggerObject -> FGeneral name props
       else FEnum name enums
     where
       enums = s^.paramSchema.enum_._Just
       convByFormat "date" = FDay
       convByFormat "yyyy-mm-ddThh:MM:ssZ" = FUTCTime
+      props = M.toList $ s^.properties
+
 -- map (id.fst &&& convert) defs
 
 enums :: [(Text, FieldType)]
@@ -67,3 +75,9 @@ prims = filter (isPrim . snd) $ map (id.fst &&& convert) defs
       isPrim FNumber = True
       isPrim FBool = True
       isPrim _ = False
+
+models :: [(Text, FieldType)]
+models = filter (isObj . snd) $ map (id.fst &&& convert) defs
+    where
+      isObj (FGeneral _ _) = True
+      isObj _ = False
