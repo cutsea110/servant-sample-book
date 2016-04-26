@@ -30,18 +30,31 @@ data FieldType = FInteger
                | FDay
                | FUTCTime
                | FEnum Text [Value]
-               | FGeneral Text [(Text, FieldType)]
+               | FObject Text [(Text, FieldType)]
                | FList FieldType
                | FNullable FieldType
                | FRef Text
                  deriving Show
 
-convert' :: [Text] -> (Text, Referenced Schema) -> FieldType
-convert' reqs (name, ref) | name `elem` reqs = conv (name, ref)
-                          | otherwise = FNullable $ conv (name, ref)
+convProperty :: ParamName -> Referenced Schema -> Bool -> FieldType
+convProperty pname rs req = if req
+                            then convProp rs
+                            else FNullable $ convProp rs
     where
-      conv (name, Inline s) = (convert (name, s))
-      conv (name, Ref (Reference s)) = FRef s
+      convProp :: Referenced Schema -> FieldType
+      convProp (Ref (Reference s)) = FRef s
+      convProp (Inline s) = convert (pname, s)
+
+convObject :: (Text, Schema) -> FieldType
+convObject (name, s) = FObject name fields
+    where
+      fields :: [(ParamName, FieldType)]
+      fields = map (\(p, s) -> (p, convProperty p s $ isReq p)) props
+      props :: [(ParamName, Referenced Schema)]
+      props = M.toList $ s^.properties
+      isReq pname = pname `elem` reqs
+      reqs :: [ParamName]
+      reqs = s^.required
 
 convert :: (Text, Schema) -> FieldType
 convert (name, s)
@@ -54,30 +67,30 @@ convert (name, s)
              SwaggerBoolean -> FBool
              SwaggerArray -> FList itemType
              SwaggerNull -> error "convert don't support yet SwaggerNull"
-             SwaggerObject -> FGeneral name $ map (id.fst &&& convert' reqs) props
+             SwaggerObject -> convObject (name, s)
     where
-      reqs = s^.required
       enums = s^.paramSchema.enum_._Just
       convByFormat "date" = FDay
       convByFormat "yyyy-mm-ddThh:MM:ssZ" = FUTCTime
       props = M.toList $ s^.properties
-      itemType = maybe (error "couldn't convert!") convByItems $ s^.items
-      convByItems (SwaggerItemsObject r) = convert' reqs (name, r)
+      itemType = maybe (error "missing SwaggaerItemsObject") convByItems
+                 $ s^.items
+      convByItems :: SwaggerItems Schema -> FieldType
       convByItems (SwaggerItemsPrimitive _ _)
-          = error "convert don't support yet for SwaggerArray with SwaggerItemsPrimitive"
+          = error "don't support SwaggerItemsPrimitive"
+      convByItems (SwaggerItemsObject (Ref (Reference s))) = FRef s
       convByItems (SwaggerItemsArray _)
-          = error "convert don't support yet for SwaggerArray with SwaggerItemsArray"
-
--- map (id.fst &&& convert) defs
+          = error "don't support SwaggerItemsArray"
+-- map (fst &&& convert) defs
 
 enums :: [(Text, FieldType)]
-enums = filter (isFEnum . snd) $ map (id.fst &&& convert) defs
+enums = filter (isFEnum . snd) $ map (fst &&& convert) defs
     where
       isFEnum (FEnum _ _) = True
       isFEnum _ = False
 
 prims :: [(Text, FieldType)]
-prims = filter (isPrim . snd) $ map (id.fst &&& convert) defs
+prims = filter (isPrim . snd) $ map (fst &&& convert) defs
     where
       isPrim FString = True
       isPrim FInteger = True
@@ -86,7 +99,7 @@ prims = filter (isPrim . snd) $ map (id.fst &&& convert) defs
       isPrim _ = False
 
 models :: [(Text, FieldType)]
-models = filter (isObj . snd) $ map (id.fst &&& convert) defs
+models = filter (isObj . snd) $ map (fst &&& convert) defs
     where
-      isObj (FGeneral _ _) = True
+      isObj (FObject _ _) = True
       isObj _ = False
