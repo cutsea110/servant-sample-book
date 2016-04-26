@@ -4,6 +4,7 @@ module Swagger where
 
 import Control.Lens
 import Data.Aeson (encode)
+import Data.Monoid
 import Data.Proxy
 import Data.Swagger
 import Data.Swagger.Internal.Schema

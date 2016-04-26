@@ -48,6 +48,7 @@ executable book-server
                      , text >=1.2 && <1.3
                      , time >=1.5 && <1.6
                      , transformers >=0.4 && <0.5
+                     , unordered-containers >= 0.2.7.0
                      , wai >=3.2 && <3.3
                      , warp >=3.2 && <3.3
   hs-source-dirs:      src
