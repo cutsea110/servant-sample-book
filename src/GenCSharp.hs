@@ -38,20 +38,17 @@ instance Monoid a => Monoid (Swag a) where
     mempty = Swag mempty
     (Swag x) `mappend` (Swag y) = Swag (x `mappend` y)
 
-newtype SwagT m a = SwagT { runSwagT :: m (Swag a) }
+newtype SwagT m a = SwagT { runSwagT :: Swagger -> m a }
 instance Monad m => Functor (SwagT m) where
-    fmap f (SwagT x) = SwagT $ do
-                 (Swag s) <- x
-                 return $ Swag (f . s)
+    fmap f x = SwagT $ \sw -> return . f =<< runSwagT x sw
 instance Monad m => Applicative (SwagT m) where
-    pure = SwagT . return . Swag . const
-    (SwagT f) <*> (SwagT g) = SwagT $ do
-                                Swag s <- f
-                                Swag t <- g
-                                return $ Swag $ s <*> t
+    pure x = SwagT $ \sw -> return x
+    f <*> g = SwagT $ \sw -> do
+                f' <- runSwagT f sw
+                g' <- runSwagT g sw
+                return (f' g')
 instance Monad m => Monad (SwagT m) where
-    (>>=) = undefined
-                             
+    f >>= k = SwagT $ \sw -> runSwagT f sw >>= \f' -> runSwagT (k f') sw
 
 defs :: Swag [(Text, Schema)]
 defs = Swag (M.toList . _swaggerDefinitions)
