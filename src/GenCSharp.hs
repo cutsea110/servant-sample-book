@@ -1,3 +1,5 @@
+{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE OverloadedStrings #-}
 {-# LANGUAGE QuasiQuotes #-}
@@ -19,7 +21,7 @@ import Text.Heredoc
 import Swagger
 import API (api)
 
-defs :: Swagger -> [(Text, Schema)]
+defs :: Swag [(Text, Schema)]
 defs sw = concatMap M.toList $ sw^..definitions
 
 pathitems :: Swagger -> [(FilePath, PathItem)]
@@ -41,17 +43,19 @@ data FieldType = FInteger
                | FRefPrim Text FieldType
                  deriving Show
 
-convProperty :: Swagger -> ParamName -> Referenced Schema -> Bool -> FieldType
-convProperty sw pname rs req = if req
-                               then convProp rs
-                               else FNullable $ convProp rs
-    where
-      convProp :: Referenced Schema -> FieldType
-      convProp (Ref (Reference s)) = convRef sw s
-      convProp (Inline s) = convert sw (pname, s)
+type Swag a = Swagger -> a
 
-convRef :: Swagger -> ParamName -> FieldType
-convRef sw pname
+convProperty :: ParamName -> Referenced Schema -> Bool -> Swag FieldType
+convProperty pname rs req = if req
+                            then convProp rs
+                            else FNullable <$> convProp rs
+    where
+      convProp :: Referenced Schema -> Swag FieldType
+      convProp (Ref (Reference s)) = convRef s
+      convProp (Inline s) = convert (pname, s)
+
+convRef :: ParamName -> Swag FieldType
+convRef pname sw
     = maybe notEnum (const $ FRefEnum pname) $ lookup pname (enums sw)
     where
       notEnum = maybe notPrim (FRefPrim pname) $ lookup pname (prims sw)
@@ -59,21 +63,21 @@ convRef sw pname
 
         
 
-convObject :: Swagger -> (Text, Schema) -> FieldType
-convObject sw (name, s) = FObject name fields
+convObject :: (Text, Schema) -> Swag FieldType
+convObject (name, s) sw = FObject name fields
     where
       fields :: [(ParamName, FieldType)]
-      fields = map (\(p, s) -> (p, convProperty sw p s $ isReq p)) props
+      fields = map (\(p, s) -> (p, convProperty p s (isReq p) sw)) props
       props :: [(ParamName, Referenced Schema)]
       props = M.toList $ s^.properties
       isReq pname = pname `elem` reqs
       reqs :: [ParamName]
       reqs = s^.required
 
-convert :: Swagger -> (Text, Schema) -> FieldType
-convert sw (name, s)
-    = if not $ null enums
-      then FEnum name enums
+convert :: (Text, Schema) -> Swag FieldType
+convert (name, s) sw
+    = if not $ null enums'
+      then FEnum name enums'
       else case s^.type_ of
              SwaggerString -> maybe FString convByFormat $ s^.format
              SwaggerInteger -> FInteger
@@ -81,9 +85,9 @@ convert sw (name, s)
              SwaggerBoolean -> FBool
              SwaggerArray -> FList itemType
              SwaggerNull -> error "convert don't support yet SwaggerNull"
-             SwaggerObject -> convObject sw (name, s)
+             SwaggerObject -> convObject (name, s) sw
     where
-      enums = s^.paramSchema.enum_._Just
+      enums' = s^.paramSchema.enum_._Just
       convByFormat "date" = FDay
       convByFormat "yyyy-mm-ddThh:MM:ssZ" = FUTCTime
       props = M.toList $ s^.properties
@@ -92,19 +96,19 @@ convert sw (name, s)
       convByItems :: SwaggerItems Schema -> FieldType
       convByItems (SwaggerItemsPrimitive _ _)
           = error "don't support SwaggerItemsPrimitive"
-      convByItems (SwaggerItemsObject (Ref (Reference s))) = convRef sw s
+      convByItems (SwaggerItemsObject (Ref (Reference s))) = convRef s sw
       convByItems (SwaggerItemsArray _)
           = error "don't support SwaggerItemsArray"
 -- map (fst &&& convert) defs
 
-enums :: Swagger -> [(Text, FieldType)]
-enums sw = filter (isFEnum . snd) $ map (fst &&& convert sw) (defs sw)
+enums :: Swag [(Text, FieldType)]
+enums sw = filter (isFEnum . snd) $ map (fst &&& flip convert sw) (defs sw)
     where
       isFEnum (FEnum _ _) = True
       isFEnum _ = False
 
-prims :: Swagger -> [(Text, FieldType)]
-prims sw = filter (isPrim . snd) $ map (fst &&& convert sw) (defs sw)
+prims :: Swag [(Text, FieldType)]
+prims sw = filter (isPrim . snd) $ map (fst &&& flip convert sw) (defs sw)
     where
       isPrim FString = True
       isPrim FInteger = True
@@ -115,7 +119,7 @@ prims sw = filter (isPrim . snd) $ map (fst &&& convert sw) (defs sw)
       isPrim _ = False
 
 models :: Swagger -> [(Text, FieldType)]
-models sw = filter (isObj . snd) $ map (fst &&& convert sw) (defs sw)
+models sw = filter (isObj . snd) $ map (fst &&& flip convert sw) (defs sw)
     where
       isObj (FObject _ _) = True
       isObj _ = False
