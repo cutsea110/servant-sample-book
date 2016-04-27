@@ -8,6 +8,7 @@ module GenCSharp where
 
 import Control.Arrow ((***), (&&&))
 import Control.Monad.Trans
+import Control.Monad.Identity
 import Data.Aeson
 import qualified Data.HashMap.Lazy as M
 import Data.Monoid ((<>))
@@ -24,6 +25,10 @@ import Text.Heredoc
 
 import Swagger
 import API (api)
+
+type Swag' = SwagT Identity
+runSwagger' :: Swag' a -> Swagger -> a
+runSwagger' f = runIdentity . runSwagT f
 
 newtype Swag a = Swag { runSwagger :: Swagger -> a }
 instance Functor Swag where
@@ -59,6 +64,9 @@ instance Monoid (m a) => Monoid (SwagT m a) where
 
 instance MonadTrans SwagT where
     lift m = SwagT $ \sw -> m
+
+instance MonadIO m => MonadIO (SwagT m) where
+    liftIO x = SwagT $ \sw -> liftIO x
 
 defs :: Swag [(Text, Schema)]
 defs = Swag (M.toList . _swaggerDefinitions)
@@ -337,6 +345,7 @@ namespace ${namespace conf}
 }
 |]
 
+assemblyInfoCs :: IO String
 assemblyInfoCs = do
   (year, _, _) <- fmap (toGregorian . utctDay) getCurrentTime
   guid' <- maybe UUID.nextRandom return $ guid conf
