@@ -11,6 +11,7 @@ import Control.Monad.Trans.Except
 import Data.Aeson
 import Data.Text
 import Data.Time.Calendar
+import Data.Word
 import GHC.Generics
 import Servant
 import Servant.API
@@ -23,7 +24,7 @@ import Publisher
 import Book
 
 type AddressAPI =
-       "addresses" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       "addresses" :> QueryParam "page" Word16 :> QueryParam "per_page" Word16 :>
        (    Get '[JSON] AddressList
        :<|> ReqBody '[JSON] AddressQueryCondition  :> Post '[JSON] AddressList
        )
@@ -34,7 +35,7 @@ type AddressAPI =
        :<|> Delete '[JSON] ()
        )
 
-addressServer :: (Maybe Int -> Maybe Int ->
+addressServer :: (Maybe Word16 -> Maybe Word16 ->
                       Handler AddressList
                  :<|> (AddressQueryCondition -> Handler AddressList)
                  )
@@ -46,11 +47,11 @@ addressServer :: (Maybe Int -> Maybe Int ->
                  )
 addressServer = list :<|> new :<|> opes
   where
-    list :: Maybe Int -> Maybe Int -> Handler AddressList :<|> (AddressQueryCondition -> Handler AddressList)
+    list :: Maybe Word16 -> Maybe Word16 -> Handler AddressList :<|> (AddressQueryCondition -> Handler AddressList)
     list page per_page = get page per_page :<|> finder page per_page
-    get :: Maybe Int -> Maybe Int -> Handler AddressList
+    get :: Maybe Word16 -> Maybe Word16 -> Handler AddressList
     get = undefined
-    finder :: Maybe Int -> Maybe Int -> AddressQueryCondition -> Handler AddressList
+    finder :: Maybe Word16 -> Maybe Word16 -> AddressQueryCondition -> Handler AddressList
     finder = undefined
     new :: Address -> Handler AddressId
     new = undefined
@@ -64,7 +65,7 @@ addressServer = list :<|> new :<|> opes
     delete = undefined
 
 type AuthorAPI =
-       "authors" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       "authors" :> QueryParam "page" Word16 :> QueryParam "per_page" Word16 :>
        (    Get '[JSON] AuthorList
        :<|> ReqBody '[JSON] AuthorQueryCondition :> Post '[JSON] AuthorList
        )
@@ -75,7 +76,7 @@ type AuthorAPI =
        :<|> Delete '[JSON] ()
        )
 
-authorServer :: (Maybe Int -> Maybe Int ->
+authorServer :: (Maybe Word16 -> Maybe Word16 ->
                       Handler AuthorList
                  :<|> (AuthorQueryCondition -> Handler AuthorList)
                 )
@@ -87,11 +88,11 @@ authorServer :: (Maybe Int -> Maybe Int ->
                 )
 authorServer = list :<|> new :<|> opes
   where
-    list :: Maybe Int -> Maybe Int -> Handler AuthorList :<|> (AuthorQueryCondition -> Handler AuthorList)
+    list :: Maybe Word16 -> Maybe Word16 -> Handler AuthorList :<|> (AuthorQueryCondition -> Handler AuthorList)
     list page per_page = get page per_page :<|> finder page per_page
-    get :: Maybe Int -> Maybe Int -> Handler AuthorList
+    get :: Maybe Word16 -> Maybe Word16 -> Handler AuthorList
     get = undefined
-    finder :: Maybe Int -> Maybe Int -> AuthorQueryCondition -> Handler AuthorList
+    finder :: Maybe Word16 -> Maybe Word16 -> AuthorQueryCondition -> Handler AuthorList
     finder = undefined
     new :: Author -> Handler AuthorId
     new = undefined
@@ -106,7 +107,7 @@ authorServer = list :<|> new :<|> opes
        
 
 type PublisherAPI =
-       "publishers" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       "publishers" :> QueryParam "page" Word16 :> QueryParam "per_page" Word16 :>
        (    Get '[JSON] PublisherList
        :<|> ReqBody '[JSON] PublisherQueryCondition :> Post '[JSON] PublisherList
        )
@@ -117,7 +118,7 @@ type PublisherAPI =
        :<|> Delete '[JSON] ()
        )
 
-publisherServer :: (Maybe Int -> Maybe Int ->
+publisherServer :: (Maybe Word16 -> Maybe Word16 ->
                          Handler PublisherList
                     :<|> (PublisherQueryCondition -> Handler PublisherList)
                     )
@@ -129,11 +130,11 @@ publisherServer :: (Maybe Int -> Maybe Int ->
                    )
 publisherServer = list :<|> new :<|> opes
   where
-    list :: Maybe Int -> Maybe Int -> Handler PublisherList :<|> (PublisherQueryCondition -> Handler PublisherList)
+    list :: Maybe Word16 -> Maybe Word16 -> Handler PublisherList :<|> (PublisherQueryCondition -> Handler PublisherList)
     list page per_page = get page per_page :<|> finder page per_page
-    get :: Maybe Int -> Maybe Int -> Handler PublisherList
+    get :: Maybe Word16 -> Maybe Word16 -> Handler PublisherList
     get = undefined
-    finder :: Maybe Int -> Maybe Int -> PublisherQueryCondition -> Handler PublisherList
+    finder :: Maybe Word16 -> Maybe Word16 -> PublisherQueryCondition -> Handler PublisherList
     finder = undefined
     new :: Publisher -> Handler PublisherId
     new = undefined
@@ -148,7 +149,7 @@ publisherServer = list :<|> new :<|> opes
 
 
 type BookAPI =
-       "books" :> QueryParam "page" Int :> QueryParam "per_page" Int :>
+       "books" :> QueryParam "page" Word16 :> QueryParam "per_page" Word16 :>
        (    Get '[JSON] BookList
        :<|> ReqBody '[JSON] BookQueryCondition :> Post '[JSON] BookList
        )
@@ -163,7 +164,7 @@ type BookAPI =
        :<|> ReqBody '[JSON] Book :> Put '[JSON] ()
        :<|> Delete '[JSON] ()
        )
-bookServer :: (Maybe Int -> Maybe Int ->
+bookServer :: (Maybe Word16 -> Maybe Word16 ->
                     Handler BookList
                :<|> (BookQueryCondition -> Handler BookList)
               )
@@ -180,11 +181,11 @@ bookServer :: (Maybe Int -> Maybe Int ->
                )
 bookServer = list :<|> new :<|> opes :<|> opes'
   where
-    list :: Maybe Int -> Maybe Int -> Handler BookList :<|> (BookQueryCondition -> Handler BookList)
+    list :: Maybe Word16 -> Maybe Word16 -> Handler BookList :<|> (BookQueryCondition -> Handler BookList)
     list page per_page = get page per_page :<|> finder page per_page
-    get :: Maybe Int -> Maybe Int -> Handler BookList
+    get :: Maybe Word16 -> Maybe Word16 -> Handler BookList
     get = undefined
-    finder :: Maybe Int -> Maybe Int -> BookQueryCondition -> Handler BookList
+    finder :: Maybe Word16 -> Maybe Word16 -> BookQueryCondition -> Handler BookList
     finder = undefined
     new :: Book -> Handler BookId
     new = undefined

@@ -5,6 +5,7 @@ import Data.Scientific
 import Data.Text as T
 import Data.Time (UTCTime)
 import Data.Time.Calendar (Day, fromGregorian)
+import Data.Word
 import Test.QuickCheck
 import Test.QuickCheck.Instances
 import Servant (Proxy(..), NamedContext)
@@ -73,7 +74,7 @@ instance Arbitrary AddressList where
              else vectorOf pp arbitrary
       let (cp', pp', lcnt') = (fromIntegral cp, fromIntegral pp, fromIntegral lcnt)
           cnt = ((p-1) * pp' + if lastp then count res else lcnt')
-      return $ AddressList cnt cp' pp res
+      return $ AddressList cnt cp' (fromIntegral pp) res
           where
             count = fromIntegral . Prelude.length
 
@@ -97,7 +98,7 @@ instance Arbitrary AuthorList where
              else vectorOf pp arbitrary
       let (cp', pp', lcnt') = (fromIntegral cp, fromIntegral pp, fromIntegral lcnt)
           cnt = ((p-1) * pp' + if lastp then count res else lcnt')
-      return $ AuthorList cnt cp' pp res
+      return $ AuthorList cnt cp' (fromIntegral pp) res
           where
             count = fromIntegral . Prelude.length
 
@@ -119,7 +120,7 @@ instance Arbitrary PublisherList where
              else vectorOf pp arbitrary
       let (cp', pp', lcnt') = (fromIntegral cp, fromIntegral pp, fromIntegral lcnt)
           cnt = ((p-1) * pp' + if lastp then count res else lcnt')
-      return $ PublisherList cnt cp' pp res
+      return $ PublisherList cnt cp' (fromIntegral pp) res
           where
             count = fromIntegral . Prelude.length
 
@@ -179,7 +180,7 @@ instance Arbitrary BookList where
              else vectorOf pp arbitrary
       let (cp', pp', lcnt') = (fromIntegral cp, fromIntegral pp, fromIntegral lcnt)
           cnt = ((p-1) * pp' + if lastp then count res else lcnt')
-      return $ BookList cnt cp' pp res
+      return $ BookList cnt cp' (fromIntegral pp) res
           where
             count = fromIntegral . Prelude.length
 
