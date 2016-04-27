@@ -23,6 +23,14 @@ import Swagger
 import API (api)
 
 type Swag a = Swagger -> a
+newtype SW a = SW { runSwagger :: Swagger -> a }
+instance Functor SW where
+    fmap f (SW g) = SW (f . g)
+instance Applicative SW where
+    pure = SW . const
+    (SW f) <*> (SW g) = SW (f <*> g)
+instance Monad SW where
+    (SW f) >>= k = SW $ \sw -> runSwagger (k (f sw)) sw
 
 defs :: Swag [(Text, Schema)]
 defs sw = concatMap M.toList $ sw^..definitions
