@@ -8,6 +8,7 @@ module GenCSharp where
 
 import Control.Arrow ((***), (&&&))
 import Control.Lens
+import Control.Monad.Trans.Maybe
 import Data.Aeson
 import qualified Data.HashMap.Lazy as M
 import Data.Monoid ((<>))
@@ -46,9 +47,10 @@ data FieldType = FInteger
                  deriving Show
 
 convProperty :: ParamName -> Referenced Schema -> Bool -> Swag FieldType
-convProperty pname rs req = if req
-                            then convProp rs
-                            else FNullable <$> convProp rs
+convProperty pname rs req
+    = if req
+      then convProp rs
+      else return . FNullable =<< convProp rs
     where
       convProp :: Referenced Schema -> Swag FieldType
       convProp (Ref (Reference s)) = convRef s
