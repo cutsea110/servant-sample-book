@@ -26,10 +26,12 @@ import Text.Heredoc
 import Swagger
 import API (api)
 
-type Swag' = SwagT Identity
-runSwagger' :: Swag' a -> Swagger -> a
-runSwagger' f = runIdentity . runSwagT f
-
+type Swag = SwagT Identity
+runSwagger :: Swag a -> Swagger -> a
+runSwagger f = runIdentity . runSwagT f
+mkSwag :: (Swagger -> a) -> Swag a
+mkSwag f = SwagT (Identity . f)
+{--
 newtype Swag a = Swag { runSwagger :: Swagger -> a }
 instance Functor Swag where
     fmap f g = Swag (f . runSwagger g)
@@ -40,9 +42,9 @@ instance Monad Swag where
     f >>= k = Swag $ \sw -> runSwagger (k (runSwagger f sw)) sw
 
 instance Monoid a => Monoid (Swag a) where
-    mempty = Swag mempty
-    x `mappend` y = Swag (runSwagger x `mappend` runSwagger y)
-
+    mempty = swag mempty
+    x `mappend` y = swag (runSwagger x `mappend` runSwagger y)
+--}
 newtype SwagT m a = SwagT { runSwagT :: Swagger -> m a }
 instance Monad m => Functor (SwagT m) where
     fmap f x = SwagT $ \sw -> return . f =<< runSwagT x sw
@@ -69,10 +71,10 @@ instance MonadIO m => MonadIO (SwagT m) where
     liftIO x = SwagT $ \sw -> liftIO x
 
 defs :: Swag [(Text, Schema)]
-defs = Swag (M.toList . _swaggerDefinitions)
+defs = mkSwag (M.toList . _swaggerDefinitions)
 
 pathitems :: Swag [(FilePath, PathItem)]
-pathitems = Swag (M.toList . _swaggerPaths)
+pathitems = mkSwag (M.toList . _swaggerPaths)
 
 data FieldType = FInteger
                | FNumber
