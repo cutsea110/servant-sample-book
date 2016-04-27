@@ -22,21 +22,25 @@ import Text.Heredoc
 import Swagger
 import API (api)
 
-type Swag a = Swagger -> a
-newtype SW a = SW { runSwagger :: Swagger -> a }
-instance Functor SW where
-    fmap f (SW g) = SW (f . g)
-instance Applicative SW where
-    pure = SW . const
-    (SW f) <*> (SW g) = SW (f <*> g)
-instance Monad SW where
-    (SW f) >>= k = SW $ \sw -> runSwagger (k (f sw)) sw
+-- type Swag a = Swagger -> a
+newtype Swag a = Swag { runSwagger :: Swagger -> a }
+instance Functor Swag where
+    fmap f (Swag g) = Swag (f . g)
+instance Applicative Swag where
+    pure = Swag . const
+    (Swag f) <*> (Swag g) = Swag (f <*> g)
+instance Monad Swag where
+    (Swag f) >>= k = Swag $ \sw -> runSwagger (k (f sw)) sw
+
+instance Monoid a => Monoid (Swag a) where
+    mempty = Swag mempty
+    (Swag x) `mappend` (Swag y) = Swag (x `mappend` y)
 
 defs :: Swag [(Text, Schema)]
-defs sw = concatMap M.toList $ sw^..definitions
+defs = Swag $ \sw -> concatMap M.toList $ sw^..definitions
 
 pathitems :: Swag [(FilePath, PathItem)]
-pathitems sw = concatMap M.toList $ sw^..paths
+pathitems = Swag $ \sw -> concatMap M.toList $ sw^..paths
 
 data FieldType = FInteger
                | FNumber
@@ -65,16 +69,22 @@ convProperty pname rs req
       convProp (Inline s) = convert (pname, s)
 
 convRef :: ParamName -> Swag FieldType
-convRef pname sw
-    = maybe notEnum (pure $ FRefEnum pname) $ lookup pname (enums sw)
+convRef pname = undefined
+{-
+convRef :: ParamName -> Swag FieldType
+convRef pname
+    = Swag $ \sw -> do
+        maybe (notEnum sw) (pure $ FRefEnum pname) $ lookup pname (enums sw)
     where
-      notEnum :: FieldType
-      notEnum = maybe notPrim (FRefPrim pname) $ lookup pname $ prims sw
-      notPrim :: FieldType
-      notPrim = maybe (error "not found the reference") (pure $ FRefObject pname) $ lookup pname $ models sw
-
-        
+      notEnum :: Swag FieldType
+      notEnum sw = maybe (notPrim sw) (pure $ FRefPrim pname) $ lookup pname $ prims sw
+      notPrim :: Swag FieldType
+      notPrim sw = maybe (error "not found the reference") (pure $ FRefObject pname) $ lookup pname $ models sw
+-}
+  
 convObject :: (Text, Schema) -> Swag FieldType
+convObject (name, s) = undefined
+{-
 convObject (name, s) = FObject name <$> fields
     where
       fields :: Swag [(ParamName, FieldType)]
@@ -84,41 +94,51 @@ convObject (name, s) = FObject name <$> fields
       isReq pname = pname `elem` reqs
       reqs :: [ParamName]
       reqs = s^.required
+-}
 
 convert :: (Text, Schema) -> Swag FieldType
-convert (name, s) sw
-    = if not $ null enums'
-      then FEnum name enums'
-      else case s^.type_ of
-             SwaggerString -> maybe FString convByFormat $ s^.format
-             SwaggerInteger -> FInteger
-             SwaggerNumber -> FNumber
-             SwaggerBoolean -> FBool
-             SwaggerArray -> FList itemType
-             SwaggerNull -> error "convert don't support yet SwaggerNull"
-             SwaggerObject -> convObject (name, s) sw
+convert (name, s) = do
+  if not $ null enums'
+  then return $ FEnum name enums'
+  else case type' of
+         SwaggerString -> maybe (return FString) convByFormat format'
+         SwaggerInteger -> return FInteger
+         SwaggerNumber -> return FNumber
+         SwaggerBoolean -> return FBool
+         SwaggerArray -> maybe (error "fail to convert SwaggerArray")
+                               convByItemType
+                               items'
+         SwaggerNull -> error "convert don't support SwaggerNull yet"
+         SwaggerObject -> convObject (name, s)
     where
+      items' = s^.items
+      type' = s^.type_
       enums' = s^.paramSchema.enum_._Just
-      convByFormat "date" = FDay
-      convByFormat "yyyy-mm-ddThh:MM:ssZ" = FUTCTime
-      props = M.toList $ s^.properties
-      itemType = maybe (error "missing SwaggaerItemsObject") convByItems
-                 $ s^.items
-      convByItems :: SwaggerItems Schema -> FieldType
-      convByItems (SwaggerItemsPrimitive _ _)
-          = error "don't support SwaggerItemsPrimitive"
-      convByItems (SwaggerItemsObject (Ref (Reference s))) = convRef s sw
-      convByItems (SwaggerItemsArray _)
-          = error "don't support SwaggerItemsArray"
+      format' = s^.format
+      convByFormat :: Text -> Swag FieldType
+      convByFormat "date" = return FDay
+      convByFormat "yyyy-mm-ddThh:MM:ssZ" = return FUTCTime
+      convByItemType :: SwaggerItems Schema -> Swag FieldType
+      convByItemType (SwaggerItemsObject (Ref (Reference s))) = convRef s
+      convByItemType (SwaggerItemsPrimitive _ _)
+          = error "don't support SwaggerItemsPrimitive yet"
+      convByItemType (SwaggerItemsArray _)
+          = error "don't support SwaggerItemsArray yet"
 
 enums :: Swag [(Text, FieldType)]
-enums sw = filter (isFEnum . snd) $ map (fst &&& flip convert sw) (defs sw)
+enums = do
+  fns <- mapM (return.fst) =<< defs
+  fts <- mapM convert =<< defs
+  return $ filter (isFEnum . snd) $ zip fns fts
     where
       isFEnum (FEnum _ _) = True
       isFEnum _ = False
 
 prims :: Swag [(Text, FieldType)]
-prims sw = filter (isPrim . snd) $ map (fst &&& flip convert sw) (defs sw)
+prims = do
+  fns <- mapM (return.fst) =<< defs
+  fts <- mapM convert =<< defs
+  return $ filter (isPrim . snd) $ zip fns fts
     where
       isPrim FString = True
       isPrim FInteger = True
@@ -129,12 +149,17 @@ prims sw = filter (isPrim . snd) $ map (fst &&& flip convert sw) (defs sw)
       isPrim _ = False
 
 models :: Swag [(Text, FieldType)]
-models sw = filter (isObj . snd) $ map (fst &&& flip convert sw) (defs sw)
+models = do
+  fns <- mapM (return.fst) =<< defs
+  fts <- mapM convert =<< defs
+  return $ filter (isObj . snd) $ zip fns fts
     where
       isObj (FObject _ _) = True
       isObj _ = False
 
 enumCs :: Swag String
+enumCs = undefined
+{--
 enumCs swagger = [heredoc|/* generated by servant-csharp */
 namespace ServantClientBook
 {
@@ -148,6 +173,7 @@ namespace ServantClientBook
       #endregion
 }
 |]
+--}
 
 showCSharpOriginalType :: FieldType -> String
 showCSharpOriginalType FInteger = "System.Int64"
@@ -217,6 +243,8 @@ conf :: Config
 conf = Config { namespace = "ServantClientBook" }
 
 classCs :: Swag String
+classCs = undefined
+{-
 classCs sw = [heredoc|/* generated by servant-csharp */
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -256,4 +284,5 @@ namespace ${namespace conf}
         #endregion
 }
 |]
+--}
 
