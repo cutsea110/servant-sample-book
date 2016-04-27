@@ -57,7 +57,8 @@ data FieldType = FInteger
                | FRefPrim Text FieldType
                  deriving Show
 
-convProperty :: ParamName -> Referenced Schema -> Bool -> Swag (ParamName, FieldType)
+convProperty :: ParamName -> Referenced Schema -> Bool
+             -> Swag (ParamName, FieldType)
 convProperty pname rs req
     = if req
       then convProp pname rs
@@ -65,7 +66,8 @@ convProperty pname rs req
         (n, f) <- convProp pname rs
         return (n, FNullable f)
     where
-      convProp :: ParamName -> Referenced Schema -> Swag (ParamName, FieldType)
+      convProp :: ParamName -> Referenced Schema
+               -> Swag (ParamName, FieldType)
       convProp n (Ref (Reference s)) = convRef n s
       convProp n (Inline s) = convert (n, s)
 
@@ -99,7 +101,9 @@ convert (name, s) = do
   if not $ null enums'
   then return $ (name, FEnum name enums')
   else case type' of
-         SwaggerString -> maybe (return (name, FString)) convByFormat format'
+         SwaggerString -> maybe (return (name, FString))
+                                convByFormat
+                                format'
          SwaggerInteger -> return (name, FInteger)
          SwaggerNumber -> return (name, FNumber)
          SwaggerBoolean -> return (name, FBool)
