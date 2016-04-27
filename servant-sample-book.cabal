@@ -33,7 +33,6 @@ executable book-server
                      , haskell-src-exts >= 1.17
                      , heredocs >= 0.1
                      , http-types >= 0.9
-                     , lens >=4.13 && <4.14
                      , quickcheck-instances >= 0.3.12
                      , scientific >= 0.3.4.6
                      , servant >=0.6
