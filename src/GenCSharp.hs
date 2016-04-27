@@ -7,14 +7,18 @@
 module GenCSharp where
 
 import Control.Arrow ((***), (&&&))
-import Control.Monad.Trans.Maybe
+import Control.Monad.Trans
 import Data.Aeson
 import qualified Data.HashMap.Lazy as M
 import Data.Monoid ((<>))
 import Data.Proxy
 import Data.Swagger hiding (namespace)
 import Data.Text as T (Text, unpack)
+import Data.Time.Clock (UTCTime(..), getCurrentTime)
+import Data.Time.Calendar (toGregorian)
 import System.Directory (createDirectoryIfMissing)
+import Data.UUID.Types (toString, UUID)
+import Data.UUID.V4 as UUID (nextRandom)
 import Servant.Swagger
 import Text.Heredoc
 
@@ -33,6 +37,21 @@ instance Monad Swag where
 instance Monoid a => Monoid (Swag a) where
     mempty = Swag mempty
     (Swag x) `mappend` (Swag y) = Swag (x `mappend` y)
+
+newtype SwagT m a = SwagT { runSwagT :: m (Swag a) }
+instance Monad m => Functor (SwagT m) where
+    fmap f (SwagT x) = SwagT $ do
+                 (Swag s) <- x
+                 return $ Swag (f . s)
+instance Monad m => Applicative (SwagT m) where
+    pure = SwagT . return . Swag . const
+    (SwagT f) <*> (SwagT g) = SwagT $ do
+                                Swag s <- f
+                                Swag t <- g
+                                return $ Swag $ s <*> t
+instance Monad m => Monad (SwagT m) where
+    (>>=) = undefined
+                             
 
 defs :: Swag [(Text, Schema)]
 defs = Swag (M.toList . _swaggerDefinitions)
@@ -231,10 +250,13 @@ converterType (FList t) = case converterType t of
 converterType _ = NoConv
 
 data Config = Config { namespace :: String
+                     , guid :: Maybe UUID
                      } deriving Show
 
 conf :: Config
-conf = Config { namespace = "ServantClientBook" }
+conf = Config { namespace = "ServantClientBook"
+              , guid = Nothing
+              }
 
 classCs :: Swag String
 classCs = do
@@ -306,4 +328,30 @@ namespace ${namespace conf}
         }
     }
 }
+|]
+
+assemblyInfoCs = do
+  (year, _, _) <- fmap (toGregorian . utctDay) getCurrentTime
+  guid' <- maybe UUID.nextRandom return $ guid conf
+  return [heredoc|
+using System.Reflection;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+
+[assembly: AssemblyTitle("${namespace conf}")]
+[assembly: AssemblyDescription("")]
+[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("${namespace conf}")]
+[assembly: AssemblyCopyright("Copyright ©  ${show year}")]
+[assembly: AssemblyTrademark("")]
+[assembly: AssemblyCulture("")]
+
+[assembly: ComVisible(false)]
+
+[assembly: Guid("${toString guid'}")]
+
+// [assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 |]
