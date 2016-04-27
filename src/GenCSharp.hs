@@ -100,7 +100,6 @@ convert (name, s) sw
       convByItems (SwaggerItemsObject (Ref (Reference s))) = convRef s sw
       convByItems (SwaggerItemsArray _)
           = error "don't support SwaggerItemsArray"
--- map (fst &&& convert) defs
 
 enums :: Swag [(Text, FieldType)]
 enums sw = filter (isFEnum . snd) $ map (fst &&& flip convert sw) (defs sw)
