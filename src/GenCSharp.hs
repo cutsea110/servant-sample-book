@@ -7,7 +7,6 @@
 module GenCSharp where
 
 import Control.Arrow ((***), (&&&))
-import Control.Lens
 import Control.Monad.Trans.Maybe
 import Data.Aeson
 import qualified Data.HashMap.Lazy as M
@@ -36,10 +35,10 @@ instance Monoid a => Monoid (Swag a) where
     (Swag x) `mappend` (Swag y) = Swag (x `mappend` y)
 
 defs :: Swag [(Text, Schema)]
-defs = Swag $ \sw -> concatMap M.toList $ sw^..definitions
+defs = Swag (M.toList . _swaggerDefinitions)
 
 pathitems :: Swag [(FilePath, PathItem)]
-pathitems = Swag $ \sw -> concatMap M.toList $ sw^..paths
+pathitems = Swag (M.toList . _swaggerPaths)
 
 data FieldType = FInteger
                | FNumber
@@ -90,11 +89,11 @@ convObject (name, s) = do
       fields :: Swag [(ParamName, FieldType)]
       fields = mapM (\(p, s) -> (convProperty p s (isReq p))) props
       props :: [(ParamName, Referenced Schema)]
-      props = M.toList $ s^.properties
+      props = M.toList (_schemaProperties s)
       isReq :: ParamName -> Bool
       isReq pname = pname `elem` reqs
       reqs :: [ParamName]
-      reqs = s^.required
+      reqs = _schemaRequired s
 
 convert :: (Text, Schema) -> Swag (Text, FieldType)
 convert (name, s) = do
@@ -113,10 +112,11 @@ convert (name, s) = do
          SwaggerNull -> error "convert don't support SwaggerNull yet"
          SwaggerObject -> convObject (name, s)
     where
-      items' = s^.items
-      type' = s^.type_
-      enums' = s^.paramSchema.enum_._Just
-      format' = s^.format
+      param' = _schemaParamSchema s
+      items' = _paramSchemaItems param'
+      type' = _paramSchemaType param'
+      enums' = maybe [] id $ _paramSchemaEnum param'
+      format' = _paramSchemaFormat param'
       convByFormat :: Text -> Swag (Text, FieldType)
       convByFormat "date" = return (name, FDay)
       convByFormat "yyyy-mm-ddThh:MM:ssZ" = return (name, FUTCTime)
