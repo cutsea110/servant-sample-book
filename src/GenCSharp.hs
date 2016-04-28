@@ -147,8 +147,6 @@ convObject (name, s) = do
 -}
 
 convert :: Monad m => (Text, Schema) -> SwagT m (Text, FieldType)
-convert = undefined
-{-
 convert (name, s) = do
   if not $ null enums'
   then return $ (name, FEnum name enums')
@@ -170,10 +168,11 @@ convert (name, s) = do
       type' = _paramSchemaType param'
       enums' = maybe [] id $ _paramSchemaEnum param'
       format' = _paramSchemaFormat param'
-      convByFormat :: Text -> Swag (Text, FieldType)
+      convByFormat :: Monad m => Text -> SwagT m (Text, FieldType)
       convByFormat "date" = return (name, FDay)
       convByFormat "yyyy-mm-ddThh:MM:ssZ" = return (name, FUTCTime)
-      convByItemType :: SwaggerItems Schema -> Swag (Text, FieldType)
+      convByItemType :: Monad m
+                        => SwaggerItems Schema -> SwagT m (Text, FieldType)
       convByItemType (SwaggerItemsObject (Ref (Reference s))) = do
                       (n, t) <- convRef name s
                       return (n, FList t)
@@ -181,7 +180,6 @@ convert (name, s) = do
           = error "don't support SwaggerItemsPrimitive yet"
       convByItemType (SwaggerItemsArray _)
           = error "don't support SwaggerItemsArray yet"
--}
 
 enums :: Monad m => SwagT m [(Text, FieldType)]
 enums = filterM (return.isFEnum.snd) =<< mapM convert =<< defs
