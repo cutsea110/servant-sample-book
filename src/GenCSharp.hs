@@ -102,8 +102,6 @@ data FieldType = FInteger
 
 convProperty :: Monad m => ParamName -> Referenced Schema -> Bool
              -> SwagT m (ParamName, FieldType)
-convProperty = undefined
-{-
 convProperty pname rs req
     = if req
       then convProp pname rs
@@ -111,11 +109,12 @@ convProperty pname rs req
         (n, f) <- convProp pname rs
         return (n, FNullable f)
     where
-      convProp :: ParamName -> Referenced Schema
-               -> Swag (ParamName, FieldType)
+      convProp :: Monad m
+                  => ParamName
+                      -> Referenced Schema
+                      -> SwagT m (ParamName, FieldType)
       convProp n (Ref (Reference s)) = convRef n s
       convProp n (Inline s) = convert (n, s)
--}
 
 convRef :: Monad m
            => ParamName -> Text -> SwagT m (ParamName, FieldType)
