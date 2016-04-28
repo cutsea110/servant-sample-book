@@ -37,20 +37,6 @@ mkSwag f = SwagT (return . f)
 generateFrom :: HasSwagger api => Swag a -> Proxy api -> a
 f `generateFrom` api = runSwagger f (toSwagger api)
 
-{--
-newtype Swag a = Swag { runSwagger :: Swagger -> a }
-instance Functor Swag where
-    fmap f g = Swag (f . runSwagger g)
-instance Applicative Swag where
-    pure = Swag . const
-    f <*> g = Swag (runSwagger f <*> runSwagger g)
-instance Monad Swag where
-    f >>= k = Swag $ \sw -> runSwagger (k (runSwagger f sw)) sw
-
-instance Monoid a => Monoid (Swag a) where
-    mempty = swag mempty
-    x `mappend` y = swag (runSwagger x `mappend` runSwagger y)
---}
 newtype SwagT m a = SwagT { runSwagT :: Swagger -> m a }
 instance Monad m => Functor (SwagT m) where
     fmap f x = SwagT $ \sw -> return . f =<< runSwagT x sw
@@ -180,12 +166,14 @@ convert (name, s) = do
 enums :: Monad m => SwagT m [(Text, FieldType)]
 enums = filterM (return.isFEnum.snd) =<< mapM convert =<< defs
 
+isFEnum :: FieldType -> Bool
 isFEnum (FEnum _ _) = True
 isFEnum _ = False
 
 prims :: Monad m => SwagT m [(Text, FieldType)]
 prims = filterM (return.isFPrim.snd) =<< mapM convert =<< defs
 
+isFPrim :: FieldType -> Bool
 isFPrim FString = True
 isFPrim FInteger = True
 isFPrim FNumber = True
@@ -197,6 +185,7 @@ isFPrim _ = False
 models :: Monad m => SwagT m [(Text, FieldType)]
 models = filterM (return.isFObj.snd) =<< mapM convert =<< defs
 
+isFObj :: FieldType -> Bool
 isFObj (FObject _ _) = True
 isFObj _ = False
 
