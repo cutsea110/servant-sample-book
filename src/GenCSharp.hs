@@ -65,10 +65,12 @@ instance Monad m => Monad (SwagT m) where
               runSwagT f sw >>= \f' ->
               runSwagT (k f') sw
 
-instance Monoid (m a) => Monoid (SwagT m a) where 
-    mempty = SwagT $ \sw -> mempty
-    x `mappend` y = SwagT $ \sw ->
-                    runSwagT x sw `mappend` runSwagT y sw
+instance Monad m => Monoid (SwagT m [a]) where
+    mempty = SwagT $ \sw -> return mempty
+    x `mappend` y = SwagT $ \sw -> do
+                      x' <- runSwagT x sw
+                      y' <- runSwagT y sw
+                      return $ x' `mappend` y'
 
 instance MonadTrans SwagT where
     lift m = SwagT $ \sw -> m
@@ -115,9 +117,8 @@ convProperty pname rs req
       convProp n (Inline s) = convert (n, s)
 -}
 
-convRef :: Monad m => ParamName -> Text -> SwagT m (ParamName, FieldType)
-convRef = undefined
-{-
+convRef :: Monad m
+           => ParamName -> Text -> SwagT m (ParamName, FieldType)
 convRef pname tname = do
   fs <- enums <> prims <> models
   case lookup tname fs of
@@ -128,7 +129,6 @@ convRef pname tname = do
     conv f | isFEnum f = FRefEnum tname
            | isFPrim f = FRefPrim tname f
            | isFObj  f = FRefObject tname
--}
   
 convObject :: Monad m => (Text, Schema) -> SwagT m (Text, FieldType)
 convObject (name, s) = do
