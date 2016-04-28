@@ -27,10 +27,16 @@ import Swagger
 import API (api)
 
 type Swag = SwagT Identity
+
 runSwagger :: Swag a -> Swagger -> a
 runSwagger f = runIdentity . runSwagT f
-mkSwag :: (Swagger -> a) -> Swag a
-mkSwag f = SwagT (Identity . f)
+
+mkSwag :: Monad m => (Swagger -> a) -> SwagT m a
+mkSwag f = SwagT (return . f)
+
+generateFrom :: HasSwagger api => Swag a -> Proxy api -> a
+f `generateFrom` api = runSwagger f (toSwagger api)
+
 {--
 newtype Swag a = Swag { runSwagger :: Swagger -> a }
 instance Functor Swag where
@@ -70,10 +76,10 @@ instance MonadTrans SwagT where
 instance MonadIO m => MonadIO (SwagT m) where
     liftIO x = SwagT $ \sw -> liftIO x
 
-defs :: Swag [(Text, Schema)]
+defs :: Monad m => SwagT m [(Text, Schema)]
 defs = mkSwag (M.toList . _swaggerDefinitions)
 
-pathitems :: Swag [(FilePath, PathItem)]
+pathitems :: Monad m => SwagT m [(FilePath, PathItem)]
 pathitems = mkSwag (M.toList . _swaggerPaths)
 
 data FieldType = FInteger
