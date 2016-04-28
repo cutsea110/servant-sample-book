@@ -131,12 +131,10 @@ convRef pname tname = do
 -}
   
 convObject :: Monad m => (Text, Schema) -> SwagT m (Text, FieldType)
-convObject = undefined
-{-
 convObject (name, s) = do
   return . (name,) . FObject name =<< fields
     where
-      fields :: Swag [(ParamName, FieldType)]
+      fields :: Monad m => SwagT m [(ParamName, FieldType)]
       fields = mapM (\(p, s) -> (convProperty p s (isReq p))) props
       props :: [(ParamName, Referenced Schema)]
       props = M.toList (_schemaProperties s)
@@ -144,7 +142,6 @@ convObject (name, s) = do
       isReq pname = pname `elem` reqs
       reqs :: [ParamName]
       reqs = _schemaRequired s
--}
 
 convert :: Monad m => (Text, Schema) -> SwagT m (Text, FieldType)
 convert (name, s) = do
