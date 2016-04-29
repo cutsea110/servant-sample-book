@@ -9,17 +9,17 @@ using System.Text;
 using System.Threading.Tasks;
 
 #region type alias
+using Fax = System.String;
+using AuthorId = System.Int64;
+using AddressId = System.Int64;
+using ISBN = System.String;
+using BookId = System.Int64;
+using Day = System.DateTime;
+using UTCTime = System.DateTime;
+using Emailaddress = System.String;
 using Postcode = System.String;
 using Tel = System.String;
-using Fax = System.String;
-using Emailaddress = System.String;
-using ISBN = System.String;
-using AddressId = System.Int64;
-using AuthorId = System.Int64;
 using PublisherId = System.Int64;
-using AuthorName = System.String;
-using PublisherName = System.String;
-using BookId = System.Int64;
 #endregion
 
 namespace ServantClientBook

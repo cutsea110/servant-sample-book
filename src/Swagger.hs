@@ -128,5 +128,4 @@ instance ToSchema BookList
 instance ToSchema BookQueryCondition
 
 main :: IO ()
-main = do
-  BLC.writeFile "docs/swagger.json" (encode $ toSwagger api)
+main = BLC.writeFile "docs/swagger.json" (encode $ toSwagger api)
