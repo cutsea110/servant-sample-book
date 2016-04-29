@@ -49,7 +49,7 @@ namespace ServantClientBook
         #endregion
 
         #region APIs
-         public async Task<AddressList> getAddressesAsync(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<AddressList> getAddressesAsync(int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -64,12 +64,12 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<AddressList>(content);
         }
-         public AddressList getAddresses(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public AddressList getAddresses(int? _page = null, int? _per_page = null)
          {
              Task<AddressList> t = getAddressesAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
-         public async Task<AddressList> postAddressesAsync(AddressQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<AddressList> postAddressesAsync(AddressQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -92,7 +92,7 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<AddressList>(content);
         }
-         public AddressList postAddresses(AddressQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public AddressList postAddresses(AddressQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              Task<AddressList> t = postAddressesAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
@@ -185,7 +185,7 @@ namespace ServantClientBook
              Task t = deleteAddressByIdAsync(_id);
              t.GetAwaiter().GetResult();
          }
-         public async Task<AuthorList> getAuthorsAsync(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<AuthorList> getAuthorsAsync(int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -200,12 +200,12 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<AuthorList>(content);
         }
-         public AuthorList getAuthors(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public AuthorList getAuthors(int? _page = null, int? _per_page = null)
          {
              Task<AuthorList> t = getAuthorsAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
-         public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<AuthorList> postAuthorsAsync(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -228,7 +228,7 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<AuthorList>(content);
         }
-         public AuthorList postAuthors(AuthorQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public AuthorList postAuthors(AuthorQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              Task<AuthorList> t = postAuthorsAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
@@ -321,7 +321,7 @@ namespace ServantClientBook
              Task t = deleteAuthorByIdAsync(_id);
              t.GetAwaiter().GetResult();
          }
-         public async Task<PublisherList> getPublishersAsync(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<PublisherList> getPublishersAsync(int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -336,12 +336,12 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<PublisherList>(content);
         }
-         public PublisherList getPublishers(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public PublisherList getPublishers(int? _page = null, int? _per_page = null)
          {
              Task<PublisherList> t = getPublishersAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
-         public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<PublisherList> postPublishersAsync(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -364,7 +364,7 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<PublisherList>(content);
         }
-         public PublisherList postPublishers(PublisherQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public PublisherList postPublishers(PublisherQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              Task<PublisherList> t = postPublishersAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
@@ -457,7 +457,7 @@ namespace ServantClientBook
              Task t = deletePublisherByIdAsync(_id);
              t.GetAwaiter().GetResult();
          }
-         public async Task<BookList> getBooksAsync(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<BookList> getBooksAsync(int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -472,12 +472,12 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<BookList>(content);
         }
-         public BookList getBooks(Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public BookList getBooks(int? _page = null, int? _per_page = null)
          {
              Task<BookList> t = getBooksAsync(_page, _per_page);
              return t.GetAwaiter().GetResult();
          }
-         public async Task<BookList> postBooksAsync(BookQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public async Task<BookList> postBooksAsync(BookQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              var client = new ServantClient();
              var queryparams = new List<string> {
@@ -500,7 +500,7 @@ namespace ServantClientBook
              Debug.WriteLine($"<<< {content}");
              return JsonConvert.DeserializeObject<BookList>(content);
         }
-         public BookList postBooks(BookQueryCondition _obj, Nullable<Word16> _page = null, Nullable<Word16> _per_page = null)
+         public BookList postBooks(BookQueryCondition _obj, int? _page = null, int? _per_page = null)
          {
              Task<BookList> t = postBooksAsync(_obj, _page, _per_page);
              return t.GetAwaiter().GetResult();
